@@ -21,16 +21,16 @@ The order follows the proposal's methodology (section 10): database design and A
 ## Phase 0: Setup
 
 Tasks
-- [ ] Initialise git, add `.gitignore` (node_modules, dist, `.wrangler`, `.dev.vars`, `playwright-report`, `.lighthouseci`).
-- [ ] pnpm workspace with `packages/core` and `apps/web`. Node 22 LTS or newer. Pin the pnpm version in `packageManager`.
-- [ ] TypeScript strict in every package (`strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, `noImplicitOverride`).
-- [ ] `apps/web` from the Cloudflare React template pattern: Vite + React + `@cloudflare/vite-plugin`, Worker entry `worker/index.ts`, `wrangler.jsonc` as in ARCHITECTURE.md section 21 (local D1 for now).
-- [ ] Install only the approved dependencies (AGENTS.md section 5), latest stable versions, exact versions in the lockfile.
-- [ ] ESLint (typescript-eslint strict, react-hooks, jsx-a11y), Prettier, and `scripts/check-copy-and-style.ts` that fails on: em dashes in `apps/web/src` and `docs`, `font-mono`/`monospace`, Tailwind default palette classes, `dangerouslySetInnerHTML`, `href="#"`, `console.log` in source, `TODO` or `FIXME`.
-- [ ] Move `docs/data/*.json` into `packages/core/data` and `packages/core/fixtures` (git mv, see docs/specs/TEST-DATA.md section 1).
+- [x] Initialise git, add `.gitignore` (node_modules, dist, `.wrangler`, `.dev.vars`, `playwright-report`, `.lighthouseci`).
+- [x] pnpm workspace with `packages/core` and `apps/web`. Node 22 LTS or newer. Pin the pnpm version in `packageManager`.
+- [x] TypeScript strict in every package (`strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, `noImplicitOverride`).
+- [x] `apps/web` from the Cloudflare React template pattern: Vite + React + `@cloudflare/vite-plugin`, Worker entry `worker/index.ts`, `wrangler.jsonc` as in ARCHITECTURE.md section 21 (local D1 for now).
+- [x] Install only the approved dependencies (AGENTS.md section 5), latest stable versions, exact versions in the lockfile.
+- [x] ESLint (typescript-eslint strict, react-hooks, jsx-a11y), Prettier, and `scripts/check-copy-and-style.ts` that fails on: em dashes in `apps/web/src` and `docs`, `font-mono`/`monospace`, Tailwind default palette classes, `dangerouslySetInnerHTML`, `href="#"`, `console.log` in source, `TODO` or `FIXME`.
+- [x] Move `docs/data/*.json` into `packages/core/data` and `packages/core/fixtures` (git mv, see docs/specs/TEST-DATA.md section 1).
 - [ ] Root scripts from AGENTS.md section 8, even if some are stubs that exit 0 until their phase.
-- [ ] GitHub Actions `ci.yml`: install with frozen lockfile, typecheck, lint, check script, unit tests. (E2E, bundle and Lighthouse jobs are added in Phase 9.)
-- [ ] `apps/web/.dev.vars.example` with every secret name and empty values. `README.md` placeholder with the project name only.
+- [x] GitHub Actions `ci.yml`: install with frozen lockfile, typecheck, lint, check script, unit tests. (E2E, bundle and Lighthouse jobs are added in Phase 9.)
+- [x] `apps/web/.dev.vars.example` with every secret name and empty values. `README.md` placeholder with the project name only.
 
 Gate: `pnpm install --frozen-lockfile && pnpm typecheck && pnpm lint && pnpm test` pass on a clean clone. `pnpm dev` serves a blank page and `GET /api/health` returns JSON.
 
