@@ -1,0 +1,308 @@
+{
+  "incident": {
+    "id": "demo-C01",
+    "ref": 1,
+    "code": "INC-0001",
+    "type": "robbery",
+    "family": "property",
+    "severity": 3,
+    "status": "escalated",
+    "areaId": "clifton",
+    "areaName": "Clifton",
+    "lat": 24.8138,
+    "lng": 67.03,
+    "summary": "Robbery reported in Clifton: no weapon.",
+    "reportCount": 5,
+    "languages": [
+      "English",
+      "Roman Urdu",
+      "Urdu"
+    ],
+    "evidence": {
+      "supported": 2,
+      "disputed": 1,
+      "unconfirmed": 1
+    },
+    "firstSeen": 1792335600000,
+    "lastSeen": 1792338600000,
+    "escalatedAt": 1792338000000,
+    "updatedAt": 1792338600000
+  },
+  "reports": [
+    {
+      "language": "English",
+      "type": "suspicious",
+      "severity": 1,
+      "severityReason": "Typical level for suspicious activity",
+      "summary": "Suspicious activity reported in Clifton: motorbike involved, more than one person.",
+      "recommendedAction": "Keep a safe distance, do not approach, and note details from a safe place.",
+      "claims": [
+        "motorbike",
+        "multiple"
+      ],
+      "confidence": {
+        "type": 1,
+        "location": 1,
+        "time": 1
+      },
+      "flags": [],
+      "locationText": "Clifton",
+      "areaId": "clifton",
+      "lat": 24.8138,
+      "lng": 67.03,
+      "occurredAt": 1792335600000,
+      "timeText": "120 minutes ago",
+      "engine": "rules",
+      "model": null,
+      "id": "demo-T01",
+      "text": "Two men on a motorbike keep circling near Clifton Block 5, looking suspicious",
+      "createdAt": 1792335600000
+    },
+    {
+      "language": "Roman Urdu",
+      "type": "suspicious",
+      "severity": 1,
+      "severityReason": "Typical level for suspicious activity",
+      "summary": "Suspicious activity reported in Clifton: still ongoing, motorbike involved, more than one person.",
+      "recommendedAction": "Keep a safe distance, do not approach, and note details from a safe place.",
+      "claims": [
+        "ongoing",
+        "motorbike",
+        "multiple"
+      ],
+      "confidence": {
+        "type": 1,
+        "location": 1,
+        "time": 1
+      },
+      "flags": [],
+      "locationText": "Clifton",
+      "areaId": "clifton",
+      "lat": 24.8138,
+      "lng": 67.03,
+      "occurredAt": 1792336500000,
+      "timeText": "105 minutes ago",
+      "engine": "rules",
+      "model": null,
+      "id": "demo-T02",
+      "text": "Clifton Block 5 pe do bike wale log mashkook ghoom rahe hain, abhi bhi wahin hain",
+      "createdAt": 1792336500000
+    },
+    {
+      "language": "English",
+      "type": "robbery",
+      "severity": 3,
+      "severityReason": "Weapon or injury mentioned",
+      "summary": "Robbery reported in Clifton: weapon involved, more than one person.",
+      "recommendedAction": "Keep away from the spot, do not confront anyone, and call Police 15 when safe.",
+      "claims": [
+        "weapon",
+        "multiple"
+      ],
+      "confidence": {
+        "type": 1,
+        "location": 1,
+        "time": 1
+      },
+      "flags": [],
+      "locationText": "Clifton",
+      "areaId": "clifton",
+      "lat": 24.8138,
+      "lng": 67.03,
+      "occurredAt": 1792338000000,
+      "timeText": "80 minutes ago",
+      "engine": "rules",
+      "model": null,
+      "id": "demo-T03",
+      "text": "Armed robbery at a shop in Clifton, two men with pistols took cash",
+      "createdAt": 1792338000000
+    },
+    {
+      "language": "Urdu",
+      "type": "robbery",
+      "severity": 3,
+      "severityReason": "Weapon or injury mentioned",
+      "summary": "Robbery reported in Clifton: weapon involved, more than one person.",
+      "recommendedAction": "Keep away from the spot, do not confront anyone, and call Police 15 when safe.",
+      "claims": [
+        "weapon",
+        "multiple"
+      ],
+      "confidence": {
+        "type": 1,
+        "location": 1,
+        "time": 1
+      },
+      "flags": [],
+      "locationText": "Clifton",
+      "areaId": "clifton",
+      "lat": 24.8138,
+      "lng": 67.03,
+      "occurredAt": 1792338300000,
+      "timeText": "75 minutes ago",
+      "engine": "rules",
+      "model": null,
+      "id": "demo-T04",
+      "text": "کلفٹن میں دکان پر ڈکیتی ہوئی، دو لوگ پستول کے ساتھ تھے",
+      "createdAt": 1792338300000
+    },
+    {
+      "language": "English",
+      "type": "robbery",
+      "severity": 3,
+      "severityReason": "Typical level for robbery",
+      "summary": "Robbery reported in Clifton: no weapon.",
+      "recommendedAction": "Keep away from the spot, do not confront anyone, and call Police 15 when safe.",
+      "claims": [
+        "no_weapon"
+      ],
+      "confidence": {
+        "type": 1,
+        "location": 1,
+        "time": 1
+      },
+      "flags": [],
+      "locationText": "Clifton",
+      "areaId": "clifton",
+      "lat": 24.8138,
+      "lng": 67.03,
+      "occurredAt": 1792338600000,
+      "timeText": "70 minutes ago",
+      "engine": "rules",
+      "model": null,
+      "id": "demo-T05",
+      "text": "Clifton robbery, they were unarmed I think, no weapon seen",
+      "createdAt": 1792338600000
+    }
+  ],
+  "timeline": [
+    {
+      "id": 1,
+      "at": 1792335600000,
+      "kind": "opened",
+      "severity": 1,
+      "reportId": "demo-T01",
+      "fromType": null,
+      "toType": null,
+      "fromSeverity": null,
+      "toSeverity": null,
+      "fromStatus": null,
+      "toStatus": null
+    },
+    {
+      "id": 2,
+      "at": 1792336500000,
+      "kind": "report_added",
+      "severity": 1,
+      "reportId": "demo-T02",
+      "fromType": null,
+      "toType": null,
+      "fromSeverity": null,
+      "toSeverity": null,
+      "fromStatus": null,
+      "toStatus": null
+    },
+    {
+      "id": 3,
+      "at": 1792338000000,
+      "kind": "escalated",
+      "severity": 3,
+      "reportId": "demo-T03",
+      "fromType": "suspicious",
+      "toType": "robbery",
+      "fromSeverity": 1,
+      "toSeverity": 3,
+      "fromStatus": null,
+      "toStatus": null
+    },
+    {
+      "id": 4,
+      "at": 1792338000000,
+      "kind": "report_added",
+      "severity": 3,
+      "reportId": "demo-T03",
+      "fromType": null,
+      "toType": null,
+      "fromSeverity": null,
+      "toSeverity": null,
+      "fromStatus": null,
+      "toStatus": null
+    },
+    {
+      "id": 5,
+      "at": 1792338300000,
+      "kind": "report_added",
+      "severity": 3,
+      "reportId": "demo-T04",
+      "fromType": null,
+      "toType": null,
+      "fromSeverity": null,
+      "toSeverity": null,
+      "fromStatus": null,
+      "toStatus": null
+    },
+    {
+      "id": 6,
+      "at": 1792338600000,
+      "kind": "report_added",
+      "severity": 3,
+      "reportId": "demo-T05",
+      "fromType": null,
+      "toType": null,
+      "fromSeverity": null,
+      "toSeverity": null,
+      "fromStatus": null,
+      "toStatus": null
+    }
+  ],
+  "labels": [
+    {
+      "kind": "contradictory",
+      "claim": "weapon",
+      "count": 2,
+      "opposing": {
+        "claim": "no_weapon",
+        "count": 1
+      },
+      "reportIds": [
+        "demo-T03",
+        "demo-T04"
+      ],
+      "opposingReportIds": [
+        "demo-T05"
+      ]
+    },
+    {
+      "kind": "supported",
+      "claim": "multiple",
+      "count": 4,
+      "reportIds": [
+        "demo-T01",
+        "demo-T02",
+        "demo-T03",
+        "demo-T04"
+      ],
+      "opposingReportIds": []
+    },
+    {
+      "kind": "supported",
+      "claim": "motorbike",
+      "count": 2,
+      "reportIds": [
+        "demo-T01",
+        "demo-T02"
+      ],
+      "opposingReportIds": []
+    },
+    {
+      "kind": "unconfirmed",
+      "claim": "ongoing",
+      "count": 1,
+      "reportIds": [
+        "demo-T02"
+      ],
+      "opposingReportIds": []
+    }
+  ],
+  "guidance": "Keep away from the spot, do not confront anyone, and call Police 15 when safe."
+}

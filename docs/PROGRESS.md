@@ -60,3 +60,9 @@ Map network: tiles.openfreemap.org returned HTTP 403 from environment policy. Ad
 MapLibre 6 integration implemented with lazy module worker, light/dark styles, keyboard markers, URL selection, radius halo, viewport list, incident panel and deferred responder mini-map. Two browser tests passed for real map/marker/filter/selection/navigation behavior with a fixture style, plus a separate failed-style fallback. Typecheck, lint and production build passed. Bundle check excluded map code from initial chunks, with 141.6 KB initial JS gzip, 7.3 KB CSS gzip and 69.1 KB fonts before final landing work. Core is pure and now declares sideEffects:false so unused validation modules can be removed from browser entry chunks. Live tiles and the live warm-cache timing target remain unverified due the saved network requirement.
 
 Next: Phase 8 Test Lab UI, generated landing snapshot, landing and About.
+
+## Phase 8 validation
+
+All app routes implemented. Landing displays real shared components from a generated C01 snapshot; a core test detects stale snapshots. Landing browser checks confirmed no API, map, Test Lab or report feature requests on load and valid CTAs. Responsive light/dark screenshots at 390px and 1440px passed axe and overflow checks. Test Lab browser run reached 25/25 report passes, 12 passing threads, 23 stored, 2 held, all seven real coverage checks, then reset cleared data. All 44 core/frontend tests and 18 Worker tests passed. Typecheck and lint passed.
+
+Next: Phase 9 full production-preview demo, follow-ups, all-route accessibility/keyboard/console checks, performance, audit and README. Phase 10 deployment remains deferred under the user local-first choice.

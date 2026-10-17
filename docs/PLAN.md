@@ -154,13 +154,13 @@ Gate: tests pass. Map loads in under 1.5 s on a warm cache on desktop.
 ## Phase 8: Test Lab, landing and About
 
 Tasks
-- [ ] `/test-lab`: engine toggle (AI enabled only if health says so), run, live progress, tiles, coverage checklist from real results, results and threads tables with expected vs actual, failure details, reset with confirm, AI pacing message on 429.
-- [ ] `scripts/build-demo-snapshot.ts`: run fixture cluster C01 through the pure pipeline and write `features/landing/demo-incident.json`. A unit test fails if the committed snapshot is stale.
-- [ ] `/` landing exactly as DESIGN.md section 8.2, rendering real components from the snapshot inside inert frames.
-- [ ] `/about` with ethics, limitations, free services and contacts.
+- [x] `/test-lab`: engine toggle (AI enabled only if health says so), run, live progress, tiles, coverage checklist from real results, results and threads tables with expected vs actual, failure details, reset with confirm, AI pacing message on 429.
+- [x] `scripts/build-demo-snapshot.ts`: run fixture cluster C01 through the pure pipeline and write `features/landing/demo-incident.json`. A unit test fails if the committed snapshot is stale.
+- [x] `/` landing exactly as DESIGN.md section 8.2, rendering real components from the snapshot inside inert frames.
+- [x] `/about` with ethics, limitations, free services and contacts.
 
 Tests
-- [ ] Playwright: Test Lab rules run reaches 25 of 25 passed, all 7 coverage items checked, reset clears it. Landing has both CTAs going to real pages, no network request to `/api` on load, and no map code loaded.
+- [x] Playwright: Test Lab rules run reaches 25 of 25 passed, all 7 coverage items checked, reset clears it. Landing has both CTAs going to real pages, no network request to `/api` on load, and no map code loaded.
 
 Gate: tests pass. A first-time visitor can go from landing to a completed Test Lab run without reading any instructions.
 
