@@ -1,0 +1,15 @@
+{
+  "description": "Official emergency contacts for Karachi. The only source of phone numbers in the product. Every number shown in the UI, in guidance text or in recommended actions must exist here. Checked against the Karachi Police emergency contact directory on 2026-10-18. Re-check before any public demo.",
+  "retrieved": "2026-10-18",
+  "contacts": [
+    { "id": "police", "name": "Police Madadgar", "number": "15", "types": ["suspicious", "theft", "snatching", "robbery", "harassment", "assault", "firing", "kidnapping"], "source": "https://karachipolice.gov.pk/?p=46" },
+    { "id": "rescue", "name": "Sindh Emergency Rescue Service", "number": "1122", "types": ["accident", "fire", "hazard", "assault", "firing"], "source": "https://karachipolice.gov.pk/?p=46" },
+    { "id": "edhi", "name": "Edhi Foundation", "number": "115", "types": ["accident", "assault", "firing", "fire"], "source": "https://karachipolice.gov.pk/?p=46" },
+    { "id": "chhipa", "name": "Chhipa Welfare", "number": "102", "types": ["accident", "assault", "firing"], "source": "https://karachipolice.gov.pk/?p=46" },
+    { "id": "fire", "name": "Fire Brigade", "number": "16", "types": ["fire", "hazard"], "source": "https://karachipolice.gov.pk/?p=46" },
+    { "id": "cplc", "name": "Citizens-Police Liaison Committee", "number": "1102", "types": ["theft", "snatching", "robbery", "kidnapping"], "source": "https://karachipolice.gov.pk/?p=46" },
+    { "id": "rangers", "name": "Pakistan Rangers", "number": "1101", "types": ["firing"], "source": "https://karachipolice.gov.pk/?p=46" },
+    { "id": "zainab-alert", "name": "Zainab Alert", "number": "1099", "types": ["kidnapping"], "source": "https://karachipolice.gov.pk/?p=46" },
+    { "id": "k-electric", "name": "K-Electric", "number": "118", "types": ["hazard"], "source": "https://karachipolice.gov.pk/?p=46" }
+  ]
+}
