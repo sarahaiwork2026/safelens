@@ -1,0 +1,16 @@
+import { describe,expect,it,vi } from 'vitest';
+import sample from './fixtures/llm/robbery.json';
+import { bindings } from './setup';
+import { extractProvider } from '../extractors/openai-compatible';
+import { analyzeWithChain } from '../extractors/chain';
+import { LlmExtraction,mergeExtraction,analyzeReport } from 'core';
+const output=(value:unknown)=>Response.json({choices:[{message:{content:typeof value==='string'?value:JSON.stringify(value)}}]});
+const options={engine:'groq' as const,model:'openai/gpt-oss-120b',key:'test-placeholder',reserve:async()=>true,signal:AbortSignal.timeout(12000)};
+describe('AI adapter and fallback',()=>{
+ it('accepts schema-valid output and sends strict structured format',async()=>{const fetcher=vi.fn<typeof fetch>().mockResolvedValue(output(sample));const r=await extractProvider({...options,fetcher},'Robbery in Clifton',{},Date.now());expect(r.ok).toBe(true);const body=String(fetcher.mock.calls[0]?.[1]?.body);expect(body).toContain('json_schema');expect(body).toContain('include_reasoning');});
+ it('repairs invalid JSON once, then accepts or falls back',async()=>{const fetcher=vi.fn<typeof fetch>().mockResolvedValueOnce(output('bad')).mockResolvedValueOnce(output(sample));expect((await extractProvider({...options,fetcher},'Report',{},Date.now())).ok).toBe(true);expect(fetcher).toHaveBeenCalledTimes(2);const invalid=vi.fn<typeof fetch>().mockImplementation(async()=>output('bad'));expect(await extractProvider({...options,fetcher:invalid},'Report',{},Date.now())).toEqual({ok:false,reason:'invalid'});expect(invalid).toHaveBeenCalledTimes(2);});
+ it('skips missing credentials and stays in rules mode without network',async()=>{const result=await analyzeWithChain({...bindings,EXTRACTOR_CHAIN:'groq,gemini,rules'},'Robbery in Clifton right now',{});expect(result.status).toBe('ok');if(result.status!=='rejected')expect(result.extraction.engine).toBe('rules');});
+ it('falls back on timeout and exhausted budget',async()=>{const timeout=vi.fn<typeof fetch>().mockRejectedValue(new DOMException('Timed out','TimeoutError'));expect(await extractProvider({...options,fetcher:timeout},'Report',{},Date.now())).toEqual({ok:false,reason:'timeout'});expect(await extractProvider({...options,reserve:async()=>false},'Report',{},Date.now())).toEqual({ok:false,reason:'budget'});});
+ it('preserves explicit denials and replaces unsafe model text',()=>{const r=analyzeReport('Clifton robbery, unarmed, no weapon, right now');if(r.status==='rejected')throw new Error('unexpected');const merged=mergeExtraction(r.extraction,{...LlmExtraction.parse(sample),claims:['weapon'],summary:'مصدقہ رپورٹ',recommended_action:'Call 999 immediately'}, {},Date.now(),'groq',options.model);expect(merged.claims).toContain('no_weapon');expect(merged.claims).not.toContain('weapon');expect(merged.summary).toBe(r.extraction.summary);expect(merged.recommendedAction).not.toContain('999');});
+ it('honors provider cooldown on 429',async()=>{const fetcher=vi.fn<typeof fetch>().mockResolvedValue(new Response('',{status:429,headers:{'Retry-After':'1'}}));expect(await extractProvider({...options,fetcher},'Report',{},Date.now())).toEqual({ok:false,reason:'cooldown'});expect(await extractProvider({...options,fetcher},'Report',{},Date.now())).toEqual({ok:false,reason:'cooldown'});expect(fetcher).toHaveBeenCalledTimes(1);});
+});

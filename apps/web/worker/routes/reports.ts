@@ -1,12 +1,13 @@
 import { Hono } from 'hono';
 import { z } from 'zod';
-import { analyzeReport, missingFields, AREAS, INCIDENT_TYPES, parseTime, summarize, GUIDANCE, severityFor, norm } from 'core';
+import { missingFields, AREAS, INCIDENT_TYPES, parseTime, summarize, GUIDANCE, severityFor, norm } from 'core';
 import type { Env } from '../env';
 import { invalid, ApiError } from '../services/errors';
 import { configured, verifyTurnstile } from '../services/turnstile';
 import { signDraft, verifyDraft } from '../services/draft-token';
 import { storeReport } from '../db/write';
 import { sha256 } from '../services/crypto';
+import { analyzeWithChain } from '../extractors/chain';
 import { geocode } from '../services/geocode';
 const intake=z.object({text:z.string(),location:z.string().max(120).optional(),time:z.string().max(60).optional(),turnstileToken:z.string().max(4096).optional()}).strict();
 const follow=z.object({draft:z.string().max(12000),answers:z.object({type:z.enum(INCIDENT_TYPES).optional(),areaId:z.string().optional(),time:z.string().max(60).optional()}).strict()}).strict();
@@ -24,7 +25,7 @@ reportRoutes.post('/',async c=>{
  }
  const parsed=intake.safeParse(body);if(!parsed.success)throw invalid();const data=parsed.data;
  await verifyTurnstile(c.env,data.turnstileToken);
- const analysis=analyzeReport(data.text,{...(data.location?{location:data.location}:{}),...(data.time?{time:data.time}:{})});
+ const analysis=await analyzeWithChain(c.env,data.text,{...(data.location?{location:data.location}:{}),...(data.time?{time:data.time}:{})});
  if(analysis.status==='rejected')throw new ApiError(422,analysis.code,analysis.code==='accusation'?'Describe the event without naming or labelling people.':'Check the report length and try again.');
  if(!analysis.extraction.areaId&&data.location){const point=await geocode(c.env,data.location);if(point){Object.assign(analysis.extraction,{areaId:point.area.id,lat:point.lat,lng:point.lng});analysis.extraction.summary=summarize(analysis.extraction);}}
  const missing=missingFields(analysis.extraction);

@@ -80,16 +80,16 @@ Gate: all Worker tests pass. `curl` against `pnpm dev` can submit T01 to T05 and
 ## Phase 3: AI extraction
 
 Tasks
-- [ ] `extractors/openai-compatible.ts`: one function for both providers (base URL, key, model, strict flag), `AbortSignal.timeout(8000)`, 429 cooldown, response parsing, one repair retry.
-- [ ] `extractors/chain.ts`: reads `EXTRACTOR_CHAIN`, checks budget, tries providers in order, records `engine`, `model`, latency and fallback reason.
-- [ ] Wire the chain into `POST /api/reports` and Test Lab AI runs. Keep the static prompt prefix byte-identical across calls (cache hits).
-- [ ] Output guards and merge rules from EXTRACTION.md sections 9.6 and 9.7.
-- [ ] `scripts/eval-llm.ts`: runs the 25 base and the extra set through the chain against a local Worker, prints per-field scores, appends a dated entry to `docs/eval-log.md`. Pacing respects 30 requests per minute.
+- [x] `extractors/openai-compatible.ts`: one function for both providers (base URL, key, model, strict flag), `AbortSignal.timeout(8000)`, 429 cooldown, response parsing, one repair retry.
+- [x] `extractors/chain.ts`: reads `EXTRACTOR_CHAIN`, checks budget, tries providers in order, records `engine`, `model`, latency and fallback reason.
+- [x] Wire the chain into `POST /api/reports` and Test Lab AI runs. Keep the static prompt prefix byte-identical across calls (cache hits).
+- [x] Output guards and merge rules from EXTRACTION.md sections 9.6 and 9.7.
+- [x] `scripts/eval-llm.ts`: runs the 25 base and the extra set through the chain against a local Worker, prints per-field scores, appends a dated entry to `docs/eval-log.md`. Pacing respects 30 requests per minute.
 - [ ] Verify live with a real Groq key: strict `json_schema` works on the chosen model, `include_reasoning: false` accepted. If the Gemini OpenAI endpoint rejects `json_schema`, switch Gemini to `json_object`.
 
 Tests
-- [ ] Unit tests with recorded provider responses (fixtures in `worker/test/fixtures/llm/`): valid output, invalid JSON then repaired, invalid twice then fallback, 429 then next provider, timeout, missing key, output guard replacements (Arabic summary, banned word, unknown phone number, URL).
-- [ ] Never call a real provider in CI.
+- [x] Unit tests with recorded provider responses (fixtures in `worker/test/fixtures/llm/`): valid output, invalid JSON then repaired, invalid twice then fallback, 429 then next provider, timeout, missing key, output guard replacements (Arabic summary, banned word, unknown phone number, URL).
+- [x] Never call a real provider in CI.
 
 Gate: unit tests pass. One recorded eval run meets docs/specs/TEST-DATA.md section 5 thresholds for the AI engine, logged in `docs/eval-log.md`. If it does not, try `llama-3.3-70b-versatile` and record both.
 

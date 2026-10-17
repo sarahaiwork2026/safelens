@@ -2,6 +2,8 @@ import type { ExtractionData, LlmData, Form, Engine } from './schema';
 import { PAIRS } from './claims';
 import { findArea } from './gazetteer';
 import { parseTime } from './time';
+import { summarize } from './pipeline';
+import { GUIDANCE } from './guidance';
 import { CONTACT_NUMBERS } from './contacts';
 export function guardText(text:string,fallback:string,limit:number,action=false):string {
  const clean=text.replace(/https?:\/\/\S+/g,'').replace(/<[^>]*>/g,'').replace(/[\u0000-\u001f\u007f]/g,' ').replace(/\s+/g,' ').trim();
@@ -18,8 +20,8 @@ export function mergeExtraction(rules:ExtractionData,llm:LlmData,form:Form,now:n
  x.severity=x.claims.includes('weapon')||x.claims.includes('injury')?3:llm.severity;
  if(!x.areaId && llm.location_text) { const area=findArea(llm.location_text); if(area) { x.areaId=area.id;x.lat=area.lat;x.lng=area.lng;x.confidence.location=llm.confidence.location; } x.locationText=form.location || llm.location_text; }
  if(x.occurredAt===null && llm.confidence.time>=0.7) { const time=llm.minutes_ago!==null?{minutesAgo:llm.minutes_ago}:llm.clock_time?parseTime(llm.clock_time,now):null; if(time){x.occurredAt=time.occurredAt??now-time.minutesAgo*60000;x.confidence.time=llm.confidence.time;} }
- x.summary=guardText(llm.summary,rules.summary,200);
- x.recommendedAction=guardText(llm.recommended_action,rules.recommendedAction,200,true);
+ x.summary=guardText(llm.summary,summarize(x),200);
+ x.recommendedAction=guardText(llm.recommended_action,GUIDANCE[x.type],200,true);
  x.severityReason=guardText(llm.severity_reason,rules.severityReason,160);
  return x;
 }

@@ -34,3 +34,9 @@ The approved Worker test pool is deprecated and its embedded workerd supports co
 ## Phase 2 validation
 
 Local D1 migration applied. Twelve Workers integration tests pass against actual local D1, including all 25 fixture steps, exact threads and labels, isolated datasets, idempotency, signed and expired drafts, redaction, origin/body/rate guards, status history and reopen. Local HTTP submissions T01 to T05 joined INC-0001 with 5 reports and escalated from Low to High. Next: provider adapter and guarded fallback, then UI.
+
+## Phase 3 local checkpoint
+
+Provider adapter and guarded fallback implemented. 18 Worker tests and 36 core tests passed; typecheck and lint passed. AI tests cover schema validation, one repair, repeated invalid output, missing credentials, timeout, budget, denial merge, unsafe output and cooldown. No live AI scores are claimed. User explicitly chose local development first, so proceed with the UI while the external AI evaluation and unlocked gazetteer check remain deferred. eval-llm currently scores the 25 base cases only and documents the extra AI evaluation as outstanding.
+
+Next: Phase 4 design tokens, accessible app shell and primitives, then report/dashboard/detail/map/Test Lab/landing.
