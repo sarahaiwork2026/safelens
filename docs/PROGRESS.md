@@ -6,7 +6,7 @@ Read AGENTS.md, docs/PLAN.md and this file. Use the existing checkout. Do not cr
 
 ## Current work
 
-Phase 0 local gate passed. Next: port the reference parser into typed core modules and fixture tests.
+Phase 0 local gate passed. Phase 1 local fixture gate passed. Next: implement D1 persistence and secure API routes.
 
 Validated: frozen-lockfile install, typecheck, lint, 1 fixture integrity test, 1 workerd health test, dev HTML response and /api/health. The command entries for later phases will gain implementations with their features.
 
@@ -26,3 +26,7 @@ The approved Worker test pool is deprecated and its embedded workerd supports co
 - A Groq key is needed for live AI scores. Never store the key in tracked files.
 - An identifying Nominatim contact is needed before verifying unlocked gazetteer coordinates or enabling network geocoding.
 - Production needs Cloudflare account, D1 ID, Turnstile widget/site key, signing secret, IP salt and Turnstile secret.
+
+## Phase 1 validation
+
+36 core tests passed: all 25 base reports with exact thread fields and labels, all 26 extra cases, and domain invariants. Typecheck and lint passed. The original reference also reported ALL PASS against the moved fixtures before removal. Removed docs/specs/rules-reference.mjs after the typed port passed. Unlocked coordinate verification remains unrun pending an identifying contact; local rules and fixture tests require no geocoding.

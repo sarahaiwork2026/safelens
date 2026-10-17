@@ -39,22 +39,22 @@ Gate: `pnpm install --frozen-lockfile && pnpm typecheck && pnpm lint && pnpm tes
 Port `docs/specs/rules-reference.mjs` into typed modules following docs/specs/EXTRACTION.md. Write tests with each module.
 
 Tasks
-- [ ] `schema.ts`, `labels.ts`: enums, Zod schemas, UI labels for types, claims, severities, statuses.
-- [ ] `text.ts` (sanitize, match copy, term matching), `redact.ts`, `policy.ts` (too short, too long, accusation).
-- [ ] `language.ts`.
-- [ ] `lexicon.ts` (all term lists, copied exactly from EXTRACTION.md), `rules-parser.ts`, `severity.ts`.
-- [ ] `time.ts` with an injected `now`, form and text modes, Karachi offset by hand.
-- [ ] `gazetteer.ts` (alias index, lookup, masking, search for the combobox), `geo.ts` (haversine, nearest area, `circlePolygon`).
-- [ ] `missing.ts`, `merge.ts` (written now with the rules-only path, LLM path tested with stub data), `llm-schema.ts`, `prompt.ts` (system prompt and few-shot pairs as constants).
-- [ ] `threading.ts` (pure: given candidates and a report, returns the match decision, the incident patch and the events), `claims.ts` (`labelsFromCounts`, evidence summary).
-- [ ] `guidance.ts`, `contacts.ts` (typed access to `emergency-contacts.json`).
-- [ ] `pipeline.ts`: `previewReport` (browser) and `analyzeReport` (pure part of the server pipeline, with the LLM result passed in).
+- [x] `schema.ts`, `labels.ts`: enums, Zod schemas, UI labels for types, claims, severities, statuses.
+- [x] `text.ts` (sanitize, match copy, term matching), `redact.ts`, `policy.ts` (too short, too long, accusation).
+- [x] `language.ts`.
+- [x] `lexicon.ts` (all term lists, copied exactly from EXTRACTION.md), `rules-parser.ts`, `severity.ts`.
+- [x] `time.ts` with an injected `now`, form and text modes, Karachi offset by hand.
+- [x] `gazetteer.ts` (alias index, lookup, masking, search for the combobox), `geo.ts` (haversine, nearest area, `circlePolygon`).
+- [x] `missing.ts`, `merge.ts` (written now with the rules-only path, LLM path tested with stub data), `llm-schema.ts`, `prompt.ts` (system prompt and few-shot pairs as constants).
+- [x] `threading.ts` (pure: given candidates and a report, returns the match decision, the incident patch and the events), `claims.ts` (`labelsFromCounts`, evidence summary).
+- [x] `guidance.ts`, `contacts.ts` (typed access to `emergency-contacts.json`).
+- [x] `pipeline.ts`: `previewReport` (browser) and `analyzeReport` (pure part of the server pipeline, with the LLM result passed in).
 - [ ] `scripts/verify-gazetteer.ts`: one-off Nominatim check of `locked: false` areas (1 request per second, identifying User-Agent). Run once, fix coordinates by hand, commit.
 
 Tests
-- [ ] `fixtures.test.ts`: the 25 base reports through the pure pipeline in memory, oldest first, asserting every field, every thread, every label and the totals exactly (docs/specs/TEST-DATA.md sections 2 to 5).
-- [ ] `extra.test.ts`: all extra cases (section 6).
-- [ ] Unit tests per module, including: every number in guidance and templates exists in the contacts JSON, the LLM JSON schema and the Zod schema accept the same valid sample, no lexicon term is duplicated across types, alias index is sorted longest first.
+- [x] `fixtures.test.ts`: the 25 base reports through the pure pipeline in memory, oldest first, asserting every field, every thread, every label and the totals exactly (docs/specs/TEST-DATA.md sections 2 to 5).
+- [x] `extra.test.ts`: all extra cases (section 6).
+- [x] Unit tests per module, including: every number in guidance and templates exists in the contacts JSON, the LLM JSON schema and the Zod schema accept the same valid sample, no lexicon term is duplicated across types, alias index is sorted longest first.
 
 Gate: `pnpm --filter core test` passes with the rules engine. `node docs/specs/rules-reference.mjs packages/core/data packages/core/fixtures` still passes against the moved files. Then delete `docs/specs/rules-reference.mjs` and note it in the commit message.
 
