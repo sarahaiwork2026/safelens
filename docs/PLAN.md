@@ -139,15 +139,15 @@ Gate: tests pass. The minimum demonstration steps 1 to 4 work by hand.
 ## Phase 7: Map
 
 Tasks
-- [ ] Lazy `MapCanvas` with MapLibre, OpenFreeMap Positron or Dark by color scheme, POI layers hidden, bounds and zoom limits, visible attribution.
-- [ ] DOM markers with size by report count, pulse by severity, hover tooltip, keyboard focus, selection ring, `?selected=` URL state.
-- [ ] Side panel, grouping radius halo, In view list (desktop) and bottom sheet (mobile), shared SeverityToggle.
-- [ ] Mini-map on the responder view (non-interactive, loaded after main content).
-- [ ] Failure fallback when WebGL or the style fails.
+- [x] Lazy `MapCanvas` with MapLibre, OpenFreeMap Positron or Dark by color scheme, POI layers hidden, bounds and zoom limits, visible attribution.
+- [x] DOM markers with size by report count, pulse by severity, hover tooltip, keyboard focus, selection ring, `?selected=` URL state.
+- [x] Side panel, grouping radius halo, In view list (desktop) and bottom sheet (mobile), shared SeverityToggle.
+- [x] Mini-map on the responder view (non-interactive, loaded after main content).
+- [x] Failure fallback when WebGL or the style fails.
 
 Tests
-- [ ] Playwright: markers render for seeded incidents, the toggle hides and shows markers, clicking a marker opens the panel and "Open incident" navigates, the attribution text is visible. Assert on DOM markers, not canvas pixels.
-- [ ] Bundle check: no `maplibre-gl` code in the initial chunks.
+- [x] Playwright: markers render for seeded incidents, the toggle hides and shows markers, clicking a marker opens the panel and "Open incident" navigates, the attribution text is visible. Assert on DOM markers, not canvas pixels.
+- [x] Bundle check: no `maplibre-gl` code in the initial chunks.
 
 Gate: tests pass. Map loads in under 1.5 s on a warm cache on desktop.
 

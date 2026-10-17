@@ -54,3 +54,9 @@ Report UI wired to the real Worker: multilingual live preview, area combobox, ti
 Dashboard, severity URL filters, activity and distribution, responder timeline, evidence/report highlighting, immutable source reports, status history, guidance/contacts and full in-app alerts implemented. Two browser checks passed for filters/status/axe and external Low, Moderate and High alerts; screenshots captured for each. Reduced motion had zero running animations. A separate browser flow passed for three languages joining one thread, escalation, high alert and responder evidence. Seven frontend tests passed, including dedupe, burst coalescing, hidden-tab queue and alert diffs. Typecheck and lint passed. Responder screenshots at 390px and 1440px reviewed.
 
 Map network: tiles.openfreemap.org returned HTTP 403 from environment policy. Added that single required domain to the saved draft while preserving presets. Saving the draft did not apply network access; live tiles remain unverified until environment settings are saved. Next: Phase 7 MapLibre and offline fallback tests.
+
+## Phase 7 local checkpoint
+
+MapLibre 6 integration implemented with lazy module worker, light/dark styles, keyboard markers, URL selection, radius halo, viewport list, incident panel and deferred responder mini-map. Two browser tests passed for real map/marker/filter/selection/navigation behavior with a fixture style, plus a separate failed-style fallback. Typecheck, lint and production build passed. Bundle check excluded map code from initial chunks, with 141.6 KB initial JS gzip, 7.3 KB CSS gzip and 69.1 KB fonts before final landing work. Core is pure and now declares sideEffects:false so unused validation modules can be removed from browser entry chunks. Live tiles and the live warm-cache timing target remain unverified due the saved network requirement.
+
+Next: Phase 8 Test Lab UI, generated landing snapshot, landing and About.
