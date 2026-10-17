@@ -1,0 +1,11 @@
+import { Hono } from 'hono';
+import { z } from 'zod';
+import type { Env } from '../env';
+import type { IncidentRow } from '../db/rows';
+import { detail,list } from '../db/read';
+import { sha256 } from '../services/crypto';
+import { ApiError,invalid } from '../services/errors';
+export const incidentRoutes=new Hono<{Bindings:Env}>();
+incidentRoutes.get('/',async c=>{const status=c.req.query('status')??'active';if(!['active','resolved','all'].includes(status))throw invalid();const data=await list(c.env.DB,status);const tag=`"${await sha256(JSON.stringify({...data,serverTime:0}))}"`;c.header('ETag',tag);c.header('Cache-Control','no-cache');if(c.req.header('If-None-Match')===tag)return c.body(null,304);return c.json(data);});
+incidentRoutes.get('/:ref',async c=>c.json(await detail(c.env.DB,Number(c.req.param('ref')))));
+incidentRoutes.patch('/:ref',async c=>{const input=z.object({status:z.enum(['open','monitoring','resolved'])}).strict().safeParse(await c.req.json());if(!input.success)throw invalid();const row=await c.env.DB.prepare('SELECT * FROM incidents WHERE dataset=? AND ref=?').bind('live',Number(c.req.param('ref'))).first<IncidentRow>();if(!row)throw new ApiError(404,'not_found','Incident not found.');if(row.status===input.data.status)throw new ApiError(409,'unchanged','This status is already set.');const now=Date.now();await c.env.DB.batch([c.env.DB.prepare('UPDATE incidents SET status=?,updated_at=? WHERE id=?').bind(input.data.status,now,row.id),c.env.DB.prepare('INSERT INTO timeline_events (incident_id,at,kind,severity,from_status,to_status) VALUES (?,?,?,?,?,?)').bind(row.id,now,'status_changed',row.severity,row.status,input.data.status)]);return c.json(await detail(c.env.DB,row.ref));});

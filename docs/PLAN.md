@@ -61,19 +61,19 @@ Gate: `pnpm --filter core test` passes with the rules engine. `node docs/specs/r
 ## Phase 2: Database and API (`apps/web/worker`)
 
 Tasks
-- [ ] `migrations/0001_init.sql` exactly as ARCHITECTURE.md section 10. `pnpm db:migrate` applies it locally.
-- [ ] `env.ts` typed bindings. `db/` repository functions with prepared statements only: find candidates, insert incident, update incident, insert report, insert events, list incidents, get detail, set status, counters, test runs.
-- [ ] Middleware in this order: request ID and logging, security headers, `Origin` check on mutating methods, content type check, body limit (16 KB), `API_LIMITER`, error mapper (`{ error: { code, message } }`, no stack traces).
-- [ ] Services: `draft-token.ts` (HMAC sign and verify with expiry), `turnstile.ts` (siteverify, skipped only when `ENVIRONMENT` is not production and no secret is set), `geocode.ts` (Nominatim with D1 cache and 1 request per second gate), `budget.ts` (daily counters), `ip-key.ts` (salted SHA-256).
-- [ ] Routes: `POST /api/reports` (both bodies, `REPORT_LIMITER`, duplicate suppression, one `db.batch` per stored report), `GET /api/incidents` (ETag, 304, counts, 24 hourly activity buckets), `GET /api/incidents/:ref`, `PATCH /api/incidents/:ref`, `GET /api/health`, the four test-run routes with per-run datasets and cleanup of runs older than one hour.
-- [ ] `ENVIRONMENT=production` refuses to accept reports without its required secrets.
+- [x] `migrations/0001_init.sql` exactly as ARCHITECTURE.md section 10. `pnpm db:migrate` applies it locally.
+- [x] `env.ts` typed bindings. `db/` repository functions with prepared statements only: find candidates, insert incident, update incident, insert report, insert events, list incidents, get detail, set status, counters, test runs.
+- [x] Middleware in this order: request ID and logging, security headers, `Origin` check on mutating methods, content type check, body limit (16 KB), `API_LIMITER`, error mapper (`{ error: { code, message } }`, no stack traces).
+- [x] Services: `draft-token.ts` (HMAC sign and verify with expiry), `turnstile.ts` (siteverify, skipped only when `ENVIRONMENT` is not production and no secret is set), `geocode.ts` (Nominatim with D1 cache and 1 request per second gate), `budget.ts` (daily counters), `ip-key.ts` (salted SHA-256).
+- [x] Routes: `POST /api/reports` (both bodies, `REPORT_LIMITER`, duplicate suppression, one `db.batch` per stored report), `GET /api/incidents` (ETag, 304, counts, 24 hourly activity buckets), `GET /api/incidents/:ref`, `PATCH /api/incidents/:ref`, `GET /api/health`, the four test-run routes with per-run datasets and cleanup of runs older than one hour.
+- [x] `ENVIRONMENT=production` refuses to accept reports without its required secrets.
 
 Tests (`@cloudflare/vitest-pool-workers`, real local D1)
-- [ ] Submit, needs_info, follow-up with a valid draft, tampered draft (`invalid_draft`), expired draft, rejected accusation, too short, duplicate within 60 s.
-- [ ] The full 25-report run through the test-run endpoints matches the expected threads and totals.
-- [ ] Status change writes an event and returns 409 when unchanged. Resolved incident reopens on a new matching report.
-- [ ] Security: cross-origin POST rejected, wrong content type rejected, oversized body rejected, rate limit returns 429 with `Retry-After`, responses carry the security headers, no response body contains a stack trace.
-- [ ] ETag: second identical list request returns 304.
+- [x] Submit, needs_info, follow-up with a valid draft, tampered draft (`invalid_draft`), expired draft, rejected accusation, too short, duplicate within 60 s.
+- [x] The full 25-report run through the test-run endpoints matches the expected threads and totals.
+- [x] Status change writes an event and returns 409 when unchanged. Resolved incident reopens on a new matching report.
+- [x] Security: cross-origin POST rejected, wrong content type rejected, oversized body rejected, rate limit returns 429 with `Retry-After`, responses carry the security headers, no response body contains a stack trace.
+- [x] ETag: second identical list request returns 304.
 
 Gate: all Worker tests pass. `curl` against `pnpm dev` can submit T01 to T05 and see one escalated incident.
 

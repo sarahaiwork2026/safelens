@@ -30,3 +30,7 @@ The approved Worker test pool is deprecated and its embedded workerd supports co
 ## Phase 1 validation
 
 36 core tests passed: all 25 base reports with exact thread fields and labels, all 26 extra cases, and domain invariants. Typecheck and lint passed. The original reference also reported ALL PASS against the moved fixtures before removal. Removed docs/specs/rules-reference.mjs after the typed port passed. Unlocked coordinate verification remains unrun pending an identifying contact; local rules and fixture tests require no geocoding.
+
+## Phase 2 validation
+
+Local D1 migration applied. Twelve Workers integration tests pass against actual local D1, including all 25 fixture steps, exact threads and labels, isolated datasets, idempotency, signed and expired drafts, redaction, origin/body/rate guards, status history and reopen. Local HTTP submissions T01 to T05 joined INC-0001 with 5 reports and escalated from Low to High. Next: provider adapter and guarded fallback, then UI.

@@ -14,3 +14,5 @@ export * from './geo';
 export * from './missing';
 export * from './merge';
 export { FAMILY } from './lexicon';
+export * from './api';
+export * from './severity';
