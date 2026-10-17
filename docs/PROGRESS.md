@@ -48,3 +48,9 @@ App shell, tokens, fonts, copy deck and shared primitives implemented. Four Play
 ## Phase 5 validation
 
 Report UI wired to the real Worker: multilingual live preview, area combobox, time parsing, signed missing-field follow-up, structured results, engine/confidence/guidance and offline/error handling. Eight feature browser checks passed: four languages, Urdu RTL, exact missing location/time/type prompts, short-input validation and responsive screenshots at 390px and 1440px. Axe passed on structured results. Typecheck and lint passed. Screenshots reviewed against the supplied calm card, typography and spacing references. Next: incident dashboard, responder view and full alerts.
+
+## Phase 6 validation
+
+Dashboard, severity URL filters, activity and distribution, responder timeline, evidence/report highlighting, immutable source reports, status history, guidance/contacts and full in-app alerts implemented. Two browser checks passed for filters/status/axe and external Low, Moderate and High alerts; screenshots captured for each. Reduced motion had zero running animations. A separate browser flow passed for three languages joining one thread, escalation, high alert and responder evidence. Seven frontend tests passed, including dedupe, burst coalescing, hidden-tab queue and alert diffs. Typecheck and lint passed. Responder screenshots at 390px and 1440px reviewed.
+
+Map network: tiles.openfreemap.org returned HTTP 403 from environment policy. Added that single required domain to the saved draft while preserving presets. Saving the draft did not apply network access; live tiles remain unverified until environment settings are saved. Next: Phase 7 MapLibre and offline fallback tests.

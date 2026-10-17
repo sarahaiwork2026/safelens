@@ -126,13 +126,13 @@ Gate: the four language tests and the follow-up tests pass. Urdu text is right t
 ## Phase 6: Dashboard, responder view and alerts
 
 Tasks
-- [ ] `/incidents`: title row with SeverityToggle (URL state) and status select, stat tiles, distribution bar, activity strip, IncidentRow table, loading, empty and error states.
-- [ ] `/incidents/:ref`: header with icon tile, pills, escalation path, status control (optimistic, rollback), View on map; Timeline; Reports with hidden-text handling and "Show original"; EvidencePanel with row-to-report highlighting; Details; mini-map placeholder (filled in Phase 7); Guidance; Emergency contacts with source; disclaimer.
-- [ ] Alerts: AlertHost (polling, baseline, diff, dedupe, hidden-tab queue), RedAlertDialog, custom sonner toasts, AlertCenter popover, beacon states, favicon and title signals, Web Audio cue with toggle, reduced motion handling.
+- [x] `/incidents`: title row with SeverityToggle (URL state) and status select, stat tiles, distribution bar, activity strip, IncidentRow table, loading, empty and error states.
+- [x] `/incidents/:ref`: header with icon tile, pills, escalation path, status control (optimistic, rollback), View on map; Timeline; Reports with hidden-text handling and "Show original"; EvidencePanel with row-to-report highlighting; Details; mini-map placeholder (filled in Phase 7); Guidance; Emergency contacts with source; disclaimer.
+- [x] Alerts: AlertHost (polling, baseline, diff, dedupe, hidden-tab queue), RedAlertDialog, custom sonner toasts, AlertCenter popover, beacon states, favicon and title signals, Web Audio cue with toggle, reduced motion handling.
 
 Tests
-- [ ] Playwright: severity toggle filters the list and survives reload. Status change appears in the timeline. A red alert fires when a High incident is created from a second browser context, a yellow toast for Moderate, a green toast for Low, all three look different (screenshot assertions) and each contains "Unverified". With `reducedMotion: "reduce"` no element has a running animation.
-- [ ] Unit: alert diff logic (baseline, new, escalated, dedupe, coalescing, own submissions).
+- [x] Playwright: severity toggle filters the list and survives reload. Status change appears in the timeline. A red alert fires when a High incident is created from a second browser context, a yellow toast for Moderate, a green toast for Low, all three look different (screenshot assertions) and each contains "Unverified". With `reducedMotion: "reduce"` no element has a running animation.
+- [x] Unit: alert diff logic (baseline, new, escalated, dedupe, coalescing, own submissions).
 
 Gate: tests pass. The minimum demonstration steps 1 to 4 work by hand.
 
