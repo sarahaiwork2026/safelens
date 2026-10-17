@@ -44,3 +44,7 @@ Next: Phase 4 design tokens, accessible app shell and primitives, then report/da
 ## Phase 4 validation
 
 App shell, tokens, fonts, copy deck and shared primitives implemented. Four Playwright shell checks passed over all five app routes at 320px and 1440px, light and dark, with reduced motion. Axe reported zero violations and no horizontal overflow. Three component/format tests passed, including severity icons, arrow-key selection and Karachi midnight formatting. The browser uses preinstalled /usr/bin/chromium; downloading a Playwright browser was denied by the environment domain policy and was unnecessary. Next: report intake UI and signed follow-ups.
+
+## Phase 5 validation
+
+Report UI wired to the real Worker: multilingual live preview, area combobox, time parsing, signed missing-field follow-up, structured results, engine/confidence/guidance and offline/error handling. Eight feature browser checks passed: four languages, Urdu RTL, exact missing location/time/type prompts, short-input validation and responsive screenshots at 390px and 1440px. Axe passed on structured results. Typecheck and lint passed. Screenshots reviewed against the supplied calm card, typography and spacing references. Next: incident dashboard, responder view and full alerts.

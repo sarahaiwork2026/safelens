@@ -111,15 +111,15 @@ Gate: every route renders inside the shell with real headings and working naviga
 ## Phase 5: Report page
 
 Tasks
-- [ ] Description field with all input details from ARCHITECTURE.md section 6.1 (dir, lang, bidi, IME-safe debounced preview, counter, Ctrl or Cmd+Enter, example chips).
-- [ ] Where combobox over the gazetteer with Urdu names and free text. When field with chips and live parsed preview.
-- [ ] Understanding panel driven by `previewReport` from core.
-- [ ] Turnstile widget loaded only on this route (managed mode), token sent on first submit, reset on failure.
-- [ ] Submit state machine (idle, analyzing, ok, needs_info, rejected, error, offline), FollowUpCard with draft resubmit, StructuredResult with outcome banner, escalation path, confidence meters, engine badge, actions.
-- [ ] Own-submission alerts through the alert store (Phase 6 completes the dialog, use a toast until then).
+- [x] Description field with all input details from ARCHITECTURE.md section 6.1 (dir, lang, bidi, IME-safe debounced preview, counter, Ctrl or Cmd+Enter, example chips).
+- [x] Where combobox over the gazetteer with Urdu names and free text. When field with chips and live parsed preview.
+- [x] Understanding panel driven by `previewReport` from core.
+- [x] Turnstile widget loaded only on this route (managed mode), token sent on first submit, reset on failure.
+- [x] Submit state machine (idle, analyzing, ok, needs_info, rejected, error, offline), FollowUpCard with draft resubmit, StructuredResult with outcome banner, escalation path, confidence meters, engine badge, actions.
+- [x] Own-submission alerts through the alert store (Phase 6 completes the dialog, use a toast until then).
 
 Tests
-- [ ] Playwright: English, Urdu, Roman Urdu and Mixed inputs each produce a valid structured result (rules engine). Missing type, location and time each trigger the follow-up card with only those fields. Too short shows the inline error. Double submit is impossible while analyzing.
+- [x] Playwright: English, Urdu, Roman Urdu and Mixed inputs each produce a valid structured result (rules engine). Missing type, location and time each trigger the follow-up card with only those fields. Too short shows the inline error. Double submit is impossible while analyzing.
 
 Gate: the four language tests and the follow-up tests pass. Urdu text is right to left in the field and in the result.
 

@@ -1,0 +1,29 @@
+import { useCallback,useEffect,useRef,useState } from 'react';
+import type { FormEvent } from 'react';
+import { useMutation,useQuery } from '@tanstack/react-query';
+import { Toaster,toast } from 'sonner';
+import { analyzeReport,detectLanguage,LANGUAGE_TAGS,parseTime } from 'core';
+import type { Analysis,ReportResponse } from 'core';
+import fixtures from '../../../../../packages/core/fixtures/test-reports.json';
+import { api,ApiError } from '../../lib/api';
+import { queryClient } from '../../lib/query';
+import { copy } from '../../copy';
+import { Button,Card,Field,Skeleton } from '../../components/ui';
+import { AreaCombobox } from '../../components/ui/Combobox';
+import { Understanding } from './Understanding';
+import { StructuredResult } from './StructuredResult';
+import { FollowUp } from './FollowUp';
+import { Turnstile } from './Turnstile';
+import { useNow } from '../../lib/useNow';
+import { when } from '../../lib/format';
+const examples=[fixtures.reports[0]?.text??'',fixtures.reports[3]?.text??'',fixtures.reports[1]?.text??'',fixtures.reports[15]?.text??''];
+export default function ReportPage(){const now=useNow();const [text,setText]=useState(''),[location,setLocation]=useState(''),[time,setTime]=useState(''),[result,setResult]=useState<ReportResponse|null>(null),[preview,setPreview]=useState<Analysis>(()=>analyzeReport('')),[composing,setComposing]=useState(false),[token,setToken]=useState(''),[resetKey,setResetKey]=useState(0),[offline,setOffline]=useState(!navigator.onLine);const textarea=useRef<HTMLTextAreaElement>(null);const health=useQuery({queryKey:['health'],queryFn:api.health});const language=detectLanguage(text),urdu=language==='Urdu'||language==='Mixed',count=[...text].length;const parsedTime=time?parseTime(time,now):null;
+ useEffect(()=>{if(composing)return;const timer=setTimeout(()=>setPreview(analyzeReport(text,{location,time})),250);return()=>clearTimeout(timer);},[text,location,time,composing]);
+ useEffect(()=>{const update=()=>setOffline(!navigator.onLine);window.addEventListener('online',update);window.addEventListener('offline',update);return()=>{window.removeEventListener('online',update);window.removeEventListener('offline',update);};},[]);
+ const onToken=useCallback((value:string)=>setToken(value),[]);
+ const mutation=useMutation({mutationFn:api.report,onSuccess:response=>{setResult(response);if(response.status==='ok'){toast(`${copy.type[response.report.type]} · ${copy.severity[response.report.severity]} · ${copy.unverifiedPill}`);void queryClient.invalidateQueries({queryKey:['incidents']});}},onError:()=>{setResetKey(k=>k+1);setToken('');}});
+ const error=mutation.error instanceof Error?mutation.error.message:undefined;
+ function submit(e:FormEvent){e.preventDefault();if(mutation.isPending||result?.status==='needs_info')return;mutation.mutate({text,...location?{location}:{},...time?{time}:{},...token?{turnstileToken:token}:{}});}
+ function reset(){setResult(null);setText('');setLocation('');setTime('');mutation.reset();requestAnimationFrame(()=>textarea.current?.focus());}
+ return <div className="container page"><div className="page-title"><h1>{copy.headings.report}</h1></div><div className={`report-grid ${result?.status==='ok'?'has-result':''}`}><Card><form onSubmit={submit} className="stack"><Field id="description" label={copy.fields.description} {...(error?{error}:{})}><textarea ref={textarea} id="description" value={text} dir="auto" lang={LANGUAGE_TAGS[language]} className={`user-text ${urdu?'user-text-urdu':''}`} placeholder={copy.report.placeholder} autoComplete="off" autoCorrect="off" autoCapitalize="sentences" spellCheck={false} rows={6} readOnly={result?.status==='needs_info'} aria-invalid={Boolean(error)} aria-describedby={error?'description-error':undefined} onChange={e=>{setText(e.target.value);if(result)setResult(null);}} onCompositionStart={()=>setComposing(true)} onCompositionEnd={()=>setComposing(false)} onKeyDown={e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)&&!e.nativeEvent.isComposing){e.preventDefault();e.currentTarget.form?.requestSubmit();}}}/>{count>=800&&<span className={count>1000?'field-error':'meta'}>{copy.report.counter(count)}</span>}</Field><div className="example-chips"><span>{copy.report.examples}</span>{copy.report.exampleLabels.map((label,i)=><Button key={label} type="button" variant="ghost" onClick={()=>{setText(examples[i]??'');setResult(null);}}>{label}</Button>)}</div><div className="form-columns"><Field id="where" label={copy.fields.where}><AreaCombobox id="where" value={location} onChange={setLocation}/></Field><Field id="when" label={copy.fields.when} {...(time&&!parsedTime?{error:copy.report.unreadable}:{})}><input id="when" value={time} onChange={e=>setTime(e.target.value)} placeholder={copy.report.timePlaceholder}/><div className="time-chips">{copy.report.timeChips.map(t=><Button type="button" key={t} variant="ghost" onClick={()=>setTime(t)}>{t}</Button>)}</div>{parsedTime&&<small>{when(parsedTime.occurredAt??now-parsedTime.minutesAgo*60000,now)}</small>}</Field></div>{health.data?.turnstile&&<Turnstile onToken={onToken} resetKey={resetKey}/>}<div aria-live="polite">{result?.status==='needs_info'?<FollowUp result={result} busy={mutation.isPending} onSubmit={answers=>mutation.mutate({draft:result.draft,answers})}/>:<Button type="submit" busy={mutation.isPending} disabled={offline||count>1000||Boolean(health.data?.turnstile&&!token)}>{mutation.isPending?copy.actions.analyzing:copy.actions.analyze}</Button>}{mutation.error instanceof ApiError&&mutation.error.code==='invalid_draft'&&<Button type="button" variant="secondary" onClick={()=>{setResult(null);mutation.reset();}}>{copy.actions.submitAgain}</Button>}</div></form></Card><aside aria-live="polite">{mutation.isPending?<Skeleton/>:result?.status==='ok'?<StructuredResult key={result.report.id} result={result} onNew={reset}/>:<Understanding analysis={preview}/>}</aside></div><Toaster/></div>;
+}
