@@ -40,3 +40,7 @@ Local D1 migration applied. Twelve Workers integration tests pass against actual
 Provider adapter and guarded fallback implemented. 18 Worker tests and 36 core tests passed; typecheck and lint passed. AI tests cover schema validation, one repair, repeated invalid output, missing credentials, timeout, budget, denial merge, unsafe output and cooldown. No live AI scores are claimed. User explicitly chose local development first, so proceed with the UI while the external AI evaluation and unlocked gazetteer check remain deferred. eval-llm currently scores the 25 base cases only and documents the extra AI evaluation as outstanding.
 
 Next: Phase 4 design tokens, accessible app shell and primitives, then report/dashboard/detail/map/Test Lab/landing.
+
+## Phase 4 validation
+
+App shell, tokens, fonts, copy deck and shared primitives implemented. Four Playwright shell checks passed over all five app routes at 320px and 1440px, light and dark, with reduced motion. Axe reported zero violations and no horizontal overflow. Three component/format tests passed, including severity icons, arrow-key selection and Karachi midnight formatting. The browser uses preinstalled /usr/bin/chromium; downloading a Playwright browser was denied by the environment domain policy and was unnecessary. Next: report intake UI and signed follow-ups.

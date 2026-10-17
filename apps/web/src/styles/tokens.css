@@ -1,0 +1,39 @@
+:root {
+  color-scheme: light;
+  --bg: #FFFFFF;
+  --cream: #F8F5F0;          /* panels, secondary buttons, segmented track */
+  --cream-2: #F1EBE2;        /* hover on cream, active segments */
+  --surface: #FFFFFF;        /* cards */
+  --ink: #161618;            /* text, primary buttons, icons */
+  --ink-2: #2A2A2E;          /* primary button hover */
+  --muted: #64646A;          /* secondary text, meets AA on white and cream */
+  --subtle: #A1A1A6;         /* disabled, decorative dots only, never body text */
+  --line: rgba(22, 22, 24, 0.08);
+  --line-strong: rgba(22, 22, 24, 0.14);
+  --focus: #2F5BDA;          /* focus rings, selected map marker ring, Test Lab progress */
+  --overlay: rgba(22, 22, 24, 0.40);
+
+  --high: #D92D20;   --high-tint: #FEF3F2;   --high-tint-2: #FEE4E2;   --high-text: #B42318;   --high-line: #FDA29B;
+  --mod: #DC6803;    --mod-tint: #FFFAEB;    --mod-tint-2: #FEF0C7;    --mod-text: #93370D;    --mod-line: #FEC84B;
+  --low: #079455;    --low-tint: #ECFDF3;    --low-tint-2: #DCFAE6;    --low-text: #067647;    --low-line: #75E0A7;
+
+  --shadow-frame: 0 1px 2px rgb(0 0 0 / 0.04), 0 12px 32px -12px rgb(0 0 0 / 0.14);
+  --shadow-pop: 0 1px 2px rgb(0 0 0 / 0.06), 0 8px 24px -8px rgb(0 0 0 / 0.18);
+  --shadow-seg: 0 1px 2px rgb(0 0 0 / 0.08);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #0E0E10;  --cream: #18181B;  --cream-2: #222226;  --surface: #141416;
+    --ink: #F2F2F3; --ink-2: #FFFFFF;  --muted: #A0A0A8;    --subtle: #6B6B73;
+    --line: rgba(255, 255, 255, 0.08); --line-strong: rgba(255, 255, 255, 0.14);
+    --focus: #7B9BFF; --overlay: rgba(0, 0, 0, 0.6);
+    --high: #F04438; --high-tint: rgba(240, 68, 56, 0.10); --high-tint-2: rgba(240, 68, 56, 0.18); --high-text: #FDA29B; --high-line: rgba(240, 68, 56, 0.45);
+    --mod: #F79009;  --mod-tint: rgba(247, 144, 9, 0.10);  --mod-tint-2: rgba(247, 144, 9, 0.18);  --mod-text: #FEC84B;  --mod-line: rgba(247, 144, 9, 0.45);
+    --low: #17B26A;  --low-tint: rgba(23, 178, 106, 0.10); --low-tint-2: rgba(23, 178, 106, 0.18); --low-text: #75E0A7;  --low-line: rgba(23, 178, 106, 0.45);
+  }
+}
+
+@theme inline {
+ --color-ink:var(--ink); --color-muted:var(--muted); --color-cream:var(--cream); --color-surface:var(--surface); --color-line:var(--line); --color-high-text:var(--high-text); --color-mod-text:var(--mod-text); --color-low-text:var(--low-text);
+}

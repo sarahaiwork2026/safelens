@@ -96,15 +96,15 @@ Gate: unit tests pass. One recorded eval run meets docs/specs/TEST-DATA.md secti
 ## Phase 4: Design system and app shell
 
 Tasks
-- [ ] `tokens.css` and `base.css` from docs/DESIGN.md sections 3, 5, 9.5 and 11. Tailwind v4 `@theme inline` mapping. Fonts through Fontsource, Newsreader preloaded, fallback metrics adjusted.
-- [ ] `copy.ts` with the full copy deck (DESIGN.md section 12.2).
-- [ ] UI components: Button, Pill family, SegmentedControl, Field, Textarea, Combobox, Card, CreamPanel, FramedWindow, Dialog, Popover, Tooltip, Skeleton, EmptyState, StatTile, Select.
-- [ ] Severity components: SeverityPill, SeverityIcon, SeverityBeacon, SeverityToggle.
-- [ ] AppShell: TopBar, MobileTabBar, Footer (contacts from JSON), skip link, ErrorBoundary, NotFound, route-level lazy loading, View Transitions.
-- [ ] `lib/api.ts`, `lib/query.ts`, `lib/format.ts` (Karachi time and relative time with one shared 30 s ticker).
+- [x] `tokens.css` and `base.css` from docs/DESIGN.md sections 3, 5, 9.5 and 11. Tailwind v4 `@theme inline` mapping. Fonts through Fontsource, Newsreader preloaded, fallback metrics adjusted.
+- [x] `copy.ts` with the full copy deck (DESIGN.md section 12.2).
+- [x] UI components: Button, Pill family, SegmentedControl, Field, Textarea, Combobox, Card, CreamPanel, FramedWindow, Dialog, Popover, Tooltip, Skeleton, EmptyState, StatTile, Select.
+- [x] Severity components: SeverityPill, SeverityIcon, SeverityBeacon, SeverityToggle.
+- [x] AppShell: TopBar, MobileTabBar, Footer (contacts from JSON), skip link, ErrorBoundary, NotFound, route-level lazy loading, View Transitions.
+- [x] `lib/api.ts`, `lib/query.ts`, `lib/format.ts` (Karachi time and relative time with one shared 30 s ticker).
 
 Tests
-- [ ] Component tests for SegmentedControl keyboard behaviour, SeverityPill text and icon per level, format functions across midnight in Karachi time.
+- [x] Component tests for SegmentedControl keyboard behaviour, SeverityPill text and icon per level, format functions across midnight in Karachi time.
 
 Gate: every route renders inside the shell with real headings and working navigation, light and dark, at 320 px and 1440 px, with zero axe violations on the shell.
 

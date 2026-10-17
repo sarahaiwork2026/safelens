@@ -1,0 +1,3 @@
+import { defineConfig,devices } from '@playwright/test';
+const external=process.env.SAFELENS_E2E_URL;
+export default defineConfig({testDir:'./e2e',fullyParallel:false,workers:1,timeout:45000,expect:{timeout:10000},retries:0,reporter:[['list'],['html',{open:'never'}]],use:{baseURL:external??'http://127.0.0.1:4173',trace:'retain-on-failure',launchOptions:{executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH??'/usr/bin/chromium',args:['--no-sandbox']},...devices['Desktop Chrome']},...(external?{}:{webServer:{command:'pnpm build && pnpm db:reset && pnpm preview',url:'http://127.0.0.1:4173',timeout:120000,reuseExistingServer:false}})});
