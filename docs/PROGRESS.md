@@ -6,11 +6,11 @@ Read AGENTS.md, docs/PLAN.md and this file. Use the existing checkout. Do not cr
 
 ## Current status, 18 October 2026
 
-All application features in Phases 0 to 8 are implemented. Phase 9 local hardening passed: 47 core/frontend tests, 25 real-D1 Worker tests, 27 browser tests, strict typecheck, lint, production build and zero-vulnerability production audit. Phase 10 commands and runbook are prepared; actual deployment and live-provider rehearsal remain external work. Hosted CI is configured but has not run.
+All application features in Phases 0 to 8 are implemented. Phase 9 local hardening passed: 47 core/frontend tests, 25 real-D1 Worker tests, 28 browser tests, strict typecheck, lint, production build and zero-vulnerability production audit. Phase 10 commands and runbook are prepared; the user explicitly requires app review before any GitHub push or deployment. Full live-provider rehearsal remains external work. Hosted CI is configured but has not run.
 
 Fast 4G mobile Lighthouse passed on landing, report and incidents: performance 100/99/97, accessibility 100 throughout, best practices 100 throughout, LCP 777/930/763 ms. Initial JS is 129.4 KB gzip, CSS 18.1 KB gzip counting inline plus external copies, fonts 69.1 KB; initial map code is excluded. See performance-results.json. The earlier 1.6 Mbps, 150 ms run used Slow 4G; the final profile follows Chromium Fast4GConditions at 9 Mbps, 60 ms RTT with 4x CPU slowdown, matching the architecture.
 
-Preview: pnpm preview on port 4173, with the workerd backend on 4175. Development: pnpm dev on 5173. These processes were started in the current session and need restarting after restoration. Real screenshots are in docs/preview. Full browser validation uses a real production build, rules mode, local D1, and a fixture map style due the external tile restriction. Map failure fallback is also tested.
+Preview: pnpm preview on port 4173, with the workerd backend on 4175. Development: pnpm dev on 5173. The production preview is running; development was stopped to avoid two Worker processes sharing the local D1 files. Processes need restarting after restoration. Real screenshots are in docs/preview. Full browser validation uses a real production build, rules mode, local D1, and a fixture map style due the external tile restriction. Map failure fallback is also tested.
 
 Resume external work only after prerequisites are present: live Groq evaluation across all 51 fixtures, unlocked gazetteer verification, emergency-contact/free-tier rechecks, live tiles and timing, Cloudflare deployment, hosted CI and live rehearsal. No production URL or live AI pass is claimed. Keep the existing local implementation commits; do not reset to origin/main. A final Git bundle at /workspace/safelens-complete.bundle preserves the work independently of unverified local-commit restoration.
 
@@ -99,3 +99,13 @@ Prerendered the three entry pages from the real React routes, with safe hydratio
 Final full browser run: 27 passed in 2.2 minutes. This includes the exact seven-step demonstration, four languages and Urdu RTL, all missing-field follow-ups, report grouping/escalation, status events, all severity alerts, Test Lab 25/25 and seven coverage checks, map selection/fallback, keyboard reporting, offline retention, and every route with zero axe violations and zero browser console warnings/errors in both schemes. Responsive checks cover 320, 390 and 1440 px; reduced motion is exercised.
 
 Frozen installation, development health plus D1 list requests, production preview, typecheck, lint, 72 unit/Worker tests, audit and mobile performance all passed. Production credentials, external map tiles and live model scores remain unrun, as required by the local-first decision.
+
+## Final timed review checkpoint, 18 October 2026
+
+User imposed a 15-minute finalization window and deferred GitHub pushing and deployment until after app review. All 28 browser tests passed, including a new full keyboard demo. Fixed Escape dismissal for focused Sonner notifications so keyboard navigation can leave the notification stack. All 72 unit/Worker tests, typecheck and lint passed.
+
+Provided credentials authenticate: the Cloudflare token is account-scoped, not a user token. Groq direct extraction through the supported proxy worked in English, Urdu and Roman Urdu; fourth smoke request hit cooldown. workerd outbound fetch cannot resolve api.groq.com here; full live evaluation did not complete and encountered a local SQLite lock from concurrent preview/development processes. Do not run separate Worker processes against the same local persistence directory. Preview remains in rules mode with private credentials preserved in ignored .dev.vars.
+
+OpenFreeMap style HTTP access now returns 200. Real browser tile rendering still shows the implemented failure fallback, even with the environment proxy. No live rendered-map pass is claimed. Temporary Cloudflare Tunnel could not establish a usable public preview: HTTP 403 from its API and managed DNS failure in cloudflared. Do not present the incorrectly parsed api.trycloudflare.com address as an app link. No push, remote database mutation or deployment was performed.
+
+Final recorded browser review: reporting produced stored structured output, the incidents view opened, the map failure fallback remained usable, and Test Lab completed 25/25 with all seven coverage checks. No browser exceptions occurred. Video: docs/preview/safelens-demo.webm. Screenshots: docs/preview/report-result.png, incidents-desktop.png, map-desktop.png and test-lab.png.

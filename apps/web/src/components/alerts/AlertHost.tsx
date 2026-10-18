@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Link } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import { Popover } from 'radix-ui';
-import { Toaster } from 'sonner';
+import { Toaster, toast } from 'sonner';
 import { Volume2, VolumeX } from 'lucide-react';
 import { copy } from '../../copy';
 import { Button } from '../ui';
@@ -27,6 +27,18 @@ export default function AlertHost() {
     baseline = useRef<Record<number, number> | null>(null),
     now = useNow();
   const state = useAlerts();
+  useEffect(() => {
+    const dismiss = (event: KeyboardEvent) => {
+      if (
+        event.key === 'Escape' &&
+        document.activeElement?.closest('[data-sonner-toast]')
+      ) {
+        toast.dismiss();
+      }
+    };
+    document.addEventListener('keydown', dismiss);
+    return () => document.removeEventListener('keydown', dismiss);
+  }, []);
   useEffect(() => {
     if (!data) return;
     publishAlerts(diffAlerts(baseline.current, data.incidents, ownRefs));

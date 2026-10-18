@@ -118,7 +118,7 @@ Lighthouse uses a 390 px mobile viewport, simulated Fast 4G at 9 Mbps and 60 ms 
 
 ## Local validation and preview
 
-Final local run: 47 core/frontend tests, 25 Worker tests and 27 browser tests passed. Typecheck, lint, the production build and dependency audit passed. The minimum demonstration works through reporting, multilingual grouping, escalation, responder review, map selection, signed follow-up and the complete Test Lab.
+Final local run: 47 core/frontend tests, 25 Worker tests and 28 browser tests passed. Typecheck, lint, the production build and dependency audit passed. The minimum demonstration works through reporting, multilingual grouping, escalation, responder review, map selection, signed follow-up and the complete Test Lab.
 
 | Route | Performance | Accessibility | Best practices | Fast 4G LCP |
 | --- | --- | --- | --- | --- |
@@ -131,3 +131,13 @@ These are local production-build measurements, not hosted production results. Th
 Actual app captures: [overview](docs/preview/overview.png), [report](docs/preview/report-desktop.png), [mobile](docs/preview/report-mobile.png), [incidents](docs/preview/incidents-desktop.png), [full landing](docs/preview/landing-desktop.png) and [dark landing](docs/preview/landing-dark.png).
 
 ![SafeLens application preview](docs/preview/overview.png)
+
+## Review checkpoint, 18 October 2026
+
+The user requested review before any GitHub push or production deployment. Neither has been performed. Cloudflare account-token authentication and Groq authentication passed. Three direct live Groq adapter checks returned valid English, Urdu and Roman Urdu extractions; the fourth request reached the free-tier cooldown. This is not the full AI evaluation.
+
+The local Worker cannot resolve api.groq.com in this managed environment, so its provider chain falls back to rules. A full AI evaluation was attempted but did not complete: outbound DNS failed and concurrent local Worker processes caused a SQLite lock. Keep one Worker process per local D1 persistence directory. Full live-provider scores remain pending.
+
+A temporary Cloudflare Tunnel was attempted for review without deployment. The tunnel endpoint returned HTTP 403, and cloudflared also encountered the managed DNS restriction. No working public preview URL was obtained. The app runs locally on port 4173; this environment does not expose that loopback address as a user-facing preview.
+
+Review artifacts: [recorded working demo](docs/preview/safelens-demo.webm), [structured report](docs/preview/report-result.png), [Test Lab 25/25](docs/preview/test-lab.png). Live browser map rendering currently uses the failure fallback under this environment's network restrictions; marker/filter interactions pass against a fixture map style.

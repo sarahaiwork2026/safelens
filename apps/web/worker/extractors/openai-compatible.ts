@@ -51,6 +51,7 @@ export async function extractProvider(
         headers: {
           Authorization: `Bearer ${key}`,
           'Content-Type': 'application/json',
+          'User-Agent': 'SafeLens/0.1',
         },
         signal: AbortSignal.any([options.signal, AbortSignal.timeout(8000)]),
         body: JSON.stringify({

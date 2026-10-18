@@ -169,14 +169,14 @@ Gate: tests pass. A first-time visitor can go from landing to a completed Test L
 Tasks
 - [x] `e2e/demo.spec.ts`: the minimum demonstration from docs/specs/TEST-DATA.md section 7, steps 1 to 7, against a fresh local database with `EXTRACTOR_CHAIN=rules`.
 - [x] `e2e/follow-up.spec.ts`: T18 with Saddar and T19 with Lyari get stored.
-- [x] Axe on every route, light and dark. Keyboard-only report flow and focus behavior; the complete demo runs in Playwright.
+- [x] Axe on every route, light and dark. Keyboard-only run through the complete demo, including notification dismissal, escalation, responder status, map, follow-up and Test Lab.
 - [x] `scripts/check-bundle.ts` enforces the budget (ARCHITECTURE.md section 18). Lighthouse CI on `/`, `/report`, `/incidents` with mobile preset: performance 90+, accessibility 100, best practices 100, LCP under 2.0 s.
 - [x] Security pass: run the checklist in AGENTS.md section 7 and the threat table in ARCHITECTURE.md section 17. `pnpm audit --prod` clean or each finding explained in the README.
 - [x] No console errors or warnings on any route (Playwright listens and fails on them).
 - [x] README: what SafeLens is (two sentences), setup in under 10 steps, commands, free services used with links, environment variables, how to run the Test Lab, limitations, credits (OpenStreetMap, OpenFreeMap, Groq, Cloudflare).
 - [x] CI runs e2e, bundle check and Lighthouse on every pull request.
 
-Local gate: all 72 unit/Worker tests and 27 browser tests passed, including the complete demo. Typecheck, lint, audit, bundle and mobile Fast 4G Lighthouse passed. CI is configured; a hosted CI run and the production/live-provider checks remain unrun. See PROGRESS.md.
+Local gate: all 72 unit/Worker tests and 28 browser tests passed, including the complete demo. Typecheck, lint, audit, bundle and mobile Fast 4G Lighthouse passed. CI is configured; a hosted CI run and the production/live-provider checks remain unrun. See PROGRESS.md.
 
 ## Phase 10: Production and demo rehearsal
 

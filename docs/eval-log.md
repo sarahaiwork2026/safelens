@@ -1,3 +1,17 @@
 # AI evaluation log
 
-Local adapter, schema, repair, timeout, cooldown, budget and output guard tests use sample responses from the extraction specification. No live provider evaluation has been run. The user selected local development first. Groq credentials, base and extra live scores remain production prerequisites. Rules fixture coverage is recorded in PROGRESS.md.
+## 2026-10-18 local and live checks
+
+The local adapter, schema, repair, timeout, cooldown, budget and output guard tests pass. All 25 base fixtures and 26 extra fixtures pass with rules.
+
+The supplied Groq key authenticated successfully. Direct adapter smoke calls through the environment HTTPS proxy with openai/gpt-oss-120b returned validated, merged extractions:
+
+| Language | Type | Area | Severity | Engine |
+| --- | --- | --- | --- | --- |
+| English | fire | gulshan-e-iqbal | 3 | groq |
+| Urdu | robbery | clifton | 3 | groq |
+| Roman Urdu | suspicious | clifton | 1 | groq |
+
+The fourth mixed-language request reached provider cooldown. These are smoke checks, not the 51-fixture evaluation or a threshold pass.
+
+The full Worker evaluation was attempted but could not complete. Local workerd could not resolve api.groq.com under the managed network policy, triggering rules fallback. Running a second Worker against the same local D1 persistence directory also caused SQLITE_BUSY and stopped evaluation with HTTP 500. The second process was stopped. No complete AI score or production validation is claimed. Next run must use one Worker process with supported outbound connectivity, then run pnpm eval:llm and record all thresholds.

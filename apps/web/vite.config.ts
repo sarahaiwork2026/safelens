@@ -7,5 +7,5 @@ export default defineConfig({
   build: { manifest: true },
   worker: { format: 'es' },
   server: { port: 5173 },
-  preview: { port: 4173 },
+  preview: { port: 4173, allowedHosts: ['.trycloudflare.com'] },
 });
