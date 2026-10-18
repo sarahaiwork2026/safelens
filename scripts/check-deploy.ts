@@ -1,15 +1,11 @@
-import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { loadEnv } from 'vite';
-const config = JSON.parse(
-  await readFile('apps/web/wrangler.jsonc', 'utf8'),
-) as {
-  d1_databases: { database_id: string }[];
-  vars: { NOMINATIM_USER_AGENT?: string };
-};
+import { unstable_readConfig } from 'wrangler';
+const config = unstable_readConfig({ config: 'apps/web/wrangler.jsonc' });
 if (
   config.d1_databases.some(
-    (db) => db.database_id === '00000000-0000-0000-0000-000000000001',
+    (db: { database_id?: string }) =>
+      db.database_id === '00000000-0000-0000-0000-000000000001',
   )
 )
   throw new Error('Set the real Cloudflare D1 database ID before deploying.');
@@ -20,7 +16,10 @@ if (!siteKey || siteKey === '1x00000000000000000000AA')
   throw new Error(
     'Set the production VITE_TURNSTILE_SITE_KEY before deploying.',
   );
-if (!config.vars.NOMINATIM_USER_AGENT?.includes('@'))
+if (
+  typeof config.vars.NOMINATIM_USER_AGENT !== 'string' ||
+  !config.vars.NOMINATIM_USER_AGENT.includes('@')
+)
   throw new Error(
     'Set NOMINATIM_USER_AGENT with the human contact email before production.',
   );
