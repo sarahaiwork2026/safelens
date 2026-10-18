@@ -80,17 +80,28 @@ export default function MapPage() {
               ))
             ) : (
               <EmptyState title={copy.empty.map}>
-                <Button
-                  variant="secondary"
-                  onClick={() =>
-                    setParams((p) => {
-                      p.delete('level');
-                      return p;
-                    })
-                  }
-                >
-                  {copy.map.all}
-                </Button>
+                {filter ? (
+                  <Button
+                    variant="secondary"
+                    onClick={() =>
+                      setParams((p) => {
+                        p.delete('level');
+                        return p;
+                      })
+                    }
+                  >
+                    {copy.map.all}
+                  </Button>
+                ) : (
+                  <ActionLink
+                    to={query.data?.incidents.length ? '/incidents' : '/report'}
+                    variant="secondary"
+                  >
+                    {query.data?.incidents.length
+                      ? copy.actions.incidents
+                      : copy.actions.report}
+                  </ActionLink>
+                )}
               </EmptyState>
             )}
           </aside>
