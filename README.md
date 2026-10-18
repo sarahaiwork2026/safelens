@@ -90,6 +90,12 @@ The base fixture contract stores 23 reports, holds 2 for missing location, forms
 
 ## Production preparation
 
+Public app: **https://safelens.sarah-aiwork2026.workers.dev**.
+
+For the connected Cloudflare GitHub build, use root directory `/`, build command `pnpm build`, and deploy command `pnpm --filter web deploy`. The deploy command selects the app in this workspace. Running `npx wrangler deploy` at the repository root does not select an application.
+
+The production D1 binding and public Turnstile site key are committed. Signing, IP hashing and Turnstile secrets are stored only in Cloudflare. If `GROQ_API_KEY` is configured as a secret build variable, the deploy script securely installs it as a runtime Worker secret through standard input after deployment. It never writes the key to a file or client asset. With no native Groq build key, existing runtime secrets are preserved.
+
 Local development is complete independently of production accounts. Deployment and live AI scores are not implied by local test results.
 
 1. Create a free Cloudflare account and authenticate with `pnpm --filter web exec wrangler login`.

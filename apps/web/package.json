@@ -11,7 +11,7 @@
     "test:e2e": "playwright test",
     "db:migrate": "wrangler d1 migrations apply safelens --local",
     "db:migrate:remote": "wrangler d1 migrations apply safelens --remote",
-    "deploy": "wrangler deploy",
+    "deploy": "node ../../scripts/deploy-worker.mjs",
     "perf": "lhci autorun",
     "preview:worker": "vite preview --host 0.0.0.0"
   },

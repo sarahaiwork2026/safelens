@@ -1,4 +1,6 @@
 import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { loadEnv } from 'vite';
 const config = JSON.parse(
   await readFile('apps/web/wrangler.jsonc', 'utf8'),
 ) as {
@@ -11,7 +13,9 @@ if (
   )
 )
   throw new Error('Set the real Cloudflare D1 database ID before deploying.');
-const siteKey = process.env.VITE_TURNSTILE_SITE_KEY;
+const siteKey =
+  process.env.VITE_TURNSTILE_SITE_KEY ??
+  loadEnv('production', resolve('apps/web'), 'VITE_').VITE_TURNSTILE_SITE_KEY;
 if (!siteKey || siteKey === '1x00000000000000000000AA')
   throw new Error(
     'Set the production VITE_TURNSTILE_SITE_KEY before deploying.',
