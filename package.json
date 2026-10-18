@@ -9,13 +9,13 @@
   },
   "scripts": {
     "dev": "pnpm --filter web dev",
-    "build": "pnpm --filter web build",
-    "preview": "pnpm --filter web preview",
+    "build": "pnpm --filter web build && pnpm --filter web exec tsx --tsconfig ../../tsconfig.json scripts/prerender.tsx && tsx scripts/prepare-assets.ts",
+    "preview": "tsx scripts/preview.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . && tsx scripts/check-copy-and-style.ts",
     "test": "vitest run && pnpm --filter web test:worker",
-    "test:e2e": "pnpm --filter web test:e2e",
-    "perf": "tsx scripts/check-bundle.ts && pnpm --filter web perf",
+    "test:e2e": "tsx scripts/prepare-local-tests.ts && pnpm --filter web test:e2e",
+    "perf": "tsx scripts/check-bundle.ts && tsx scripts/lighthouse.ts",
     "db:migrate": "pnpm --filter web db:migrate",
     "db:migrate:remote": "pnpm --filter web db:migrate:remote",
     "db:reset": "tsx scripts/reset-db.ts",
@@ -23,7 +23,7 @@
     "eval:llm": "tsx scripts/eval-llm.ts",
     "snapshot": "tsx scripts/build-demo-snapshot.ts",
     "seed:demo": "tsx scripts/seed-demo.ts",
-    "deploy": "pnpm build && pnpm --filter web deploy"
+    "deploy": "tsx scripts/check-deploy.ts && pnpm build && pnpm --filter web deploy"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",

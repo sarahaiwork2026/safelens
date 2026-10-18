@@ -1,23 +1,105 @@
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Check,CheckCircle2,CircleDashed,XCircle,RotateCcw } from 'lucide-react';
-import { LANGUAGE_TAGS } from 'core';
-import type { TestRunCreated,TestRunView } from 'core';
-import { api,ApiError } from '../../lib/api';
-import { queryClient } from '../../lib/query';
+import { RotateCcw } from 'lucide-react';
 import { copy } from '../../copy';
-import { Button,Card,Confirm,Pill } from '../../components/ui';
-import { SegmentedControl,SeverityPill } from '../../components/severity';
-function restoreRun():TestRunCreated|null {try{const value:unknown=JSON.parse(sessionStorage.getItem('safelens-test-run')??'null');if(value&&typeof value==='object'&&'runId' in value&&typeof value.runId==='string'&&'baseTime' in value&&typeof value.baseTime==='number'&&'order' in value&&Array.isArray(value.order)&&value.order.every(v=>typeof v==='string'))return {runId:value.runId,baseTime:value.baseTime,order:value.order};}catch(error){if(error instanceof Error)console.info('Test run could not be restored');}return null;}
-function ResultPill({pass}:{pass:boolean}){const Icon=pass?CheckCircle2:XCircle;return <Pill className={`lab-result ${pass?'level-low':'level-high'}`}><Icon size={12}/>{pass?copy.lab.pass:copy.lab.fail}</Pill>;}
-export default function TestLabPage(){const [engine,setEngine]=useState<'rules'|'ai'>('rules'),[run,setRun]=useState<TestRunCreated|null>(restoreRun),[running,setRunning]=useState(false),[error,setError]=useState(''),[waiting,setWaiting]=useState(0),[confirm,setConfirm]=useState(false);const health=useQuery({queryKey:['health'],queryFn:api.health}),query=useQuery({queryKey:['test-run',run?.runId],queryFn:()=>api.results(run?.runId??''),enabled:Boolean(run)}),data=query.data;const passed=data?.results.filter(r=>r.pass).length??0,total=data?.results.length??0;
- async function wait(seconds:number){for(let n=seconds;n>0;n--){setWaiting(n);await new Promise(resolve=>setTimeout(resolve,1000));}setWaiting(0);}
- async function start(){setError('');setRunning(true);try{let active=run;if(!active||total===25){active=await api.run(engine);setRun(active);try{sessionStorage.setItem('safelens-test-run',JSON.stringify(active));}catch(storageError){if(storageError instanceof Error)console.info('Test run persistence unavailable');}}
- const existing=await api.results(active.runId);const completed=new Set(existing.results.map(r=>r.reportId));
- for(const reportId of active.order){if(completed.has(reportId))continue;let accepted=false;while(!accepted){try{await api.step(active.runId,reportId);accepted=true;}catch(stepError){if(stepError instanceof ApiError&&stepError.code==='rate_limited'&&stepError.retryAfter>0){await wait(Math.min(stepError.retryAfter,60));continue;}throw stepError;}}const updated=await api.results(active.runId);queryClient.setQueryData(['test-run',active.runId],updated);if(engine==='ai')await wait(3);}
- }catch(runError){setError(runError instanceof Error?runError.message:copy.errors.generic);}finally{setRunning(false);}}
- async function reset(){if(!run)return;setError('');try{await api.reset(run.runId);queryClient.removeQueries({queryKey:['test-run',run.runId]});setRun(null);sessionStorage.removeItem('safelens-test-run');}catch(resetError){setError(resetError instanceof Error?resetError.message:copy.errors.generic);}}
- const tiles=[{label:copy.lab.passed,value:`${passed}/${total}`},{label:copy.lab.stored,value:data?.totals.stored??0},{label:copy.lab.held,value:data?.totals.held??0},{label:copy.headings.threads,value:data?.totals.threads??0}];
- return <div className="container page test-lab"><div className="page-title"><h1>{copy.headings.lab}</h1><div className="actions"><SegmentedControl label={copy.engine.rules} value={engine} onChange={v=>{if(v==='rules'||v==='ai')setEngine(v);}} items={[{value:'rules',label:copy.lab.rules,disabled:running},{value:'ai',label:copy.lab.ai,disabled:running||!(health.data?.engines.groq||health.data?.engines.gemini)}]}/><Button busy={running} onClick={()=>void start()}>{running?copy.lab.running:copy.lab.run}</Button><Button variant="secondary" disabled={!run||running} onClick={()=>setConfirm(true)}><RotateCcw size={14}/>{copy.actions.reset}</Button></div></div><div className="lab-progress"><progress value={total} max={25} aria-label={copy.lab.progress(total)}/><span className="numbers">{copy.lab.progress(total)}</span></div>{waiting>0&&<p className="meta" role="status">{copy.lab.waiting(waiting)}</p>}{(error||query.isError)&&<p className="field-error" role="alert">{error||copy.errors.lab}</p>}<div className="stat-grid">{tiles.map(tile=><div className="stat-tile" key={tile.label}><span>{tile.label}</span><strong>{tile.value}</strong></div>)}</div><p className="meta lab-disclaimer">{copy.academic}</p><Coverage data={data}/><section className="lab-results"><h2>{copy.headings.results}</h2><div className="table-wrap"><table><thead><tr>{[copy.fields.id,copy.fields.description,copy.fields.language,copy.fields.type,copy.fields.severity,copy.fields.area,copy.fields.outcome,copy.fields.result].map(label=><th key={label}>{label}</th>)}</tr></thead><tbody>{data?.results.map(r=><tr className={r.pass?'':'lab-failure'} key={r.reportId}><td>{r.reportId}</td><td className="lab-summary"><span dir="auto" lang={LANGUAGE_TAGS[r.extraction.language]}>{r.extraction.summary}</span>{!r.pass&&<details><summary>{copy.fields.result}</summary>{r.differences.map(d=><p key={d}>{d}</p>)}</details>}</td><td>{r.extraction.language}</td><td>{copy.type[r.extraction.type]}</td><td><SeverityPill level={r.extraction.severity}/></td><td>{r.extraction.locationText??copy.report.notFound}</td><td>{r.outcome}</td><td><ResultPill pass={r.pass}/></td></tr>)}</tbody></table></div></section><section className="lab-results"><h2>{copy.headings.threads}</h2><div className="table-wrap"><table><thead><tr>{[copy.fields.cluster,copy.fields.incident,copy.fields.type,copy.fields.severity,copy.fields.status,copy.fields.reports,copy.fields.labels,copy.fields.result].map(label=><th key={label}>{label}</th>)}</tr></thead><tbody>{data?.threads.map(t=><tr key={t.detail.incident.ref}><td>{t.cluster}</td><td>{t.detail.incident.code}</td><td>{copy.type[t.detail.incident.type]}</td><td><SeverityPill level={t.detail.incident.severity}/></td><td>{copy.status[t.detail.incident.status]}</td><td>{t.reportIds.join(', ')}</td><td>{t.detail.labels.map(l=><span className="lab-evidence" key={l.claim}>{copy.evidence[l.kind]}: {copy.claim[l.claim]} ({l.count}){l.opposing?` ${copy.evidence.versus} ${copy.claim[l.opposing.claim]} (${l.opposing.count})`:''}</span>)}</td><td><ResultPill pass={t.pass}/>{!t.pass&&<details><summary>{copy.fields.result}</summary>{t.differences.map(d=><p key={d}>{d}</p>)}</details>}</td></tr>)}</tbody></table></div></section><Confirm open={confirm} onOpenChange={setConfirm} title={copy.lab.reset} onConfirm={()=>void reset()}/></div>;
+import { Button } from '../../components/ui';
+import { Confirm } from '../../components/ui/Confirm';
+import { SegmentedControl } from '../../components/severity';
+import { Coverage } from './Coverage';
+import { LabTables } from './LabTables';
+import { useTestRun } from './useTestRun';
+export default function TestLabPage() {
+  const [confirm, setConfirm] = useState(false);
+  const {
+    engine,
+    setEngine,
+    run,
+    running,
+    error,
+    waiting,
+    health,
+    query,
+    data,
+    passed,
+    total,
+    start,
+    reset,
+  } = useTestRun();
+  const tiles = [
+    { label: copy.lab.passed, value: `${passed}/${total}` },
+    { label: copy.lab.stored, value: data?.totals.stored ?? 0 },
+    { label: copy.lab.held, value: data?.totals.held ?? 0 },
+    { label: copy.headings.threads, value: data?.totals.threads ?? 0 },
+  ];
+  return (
+    <div className="container page test-lab">
+      <div className="page-title">
+        <h1>{copy.headings.lab}</h1>
+        <div className="actions">
+          <SegmentedControl
+            label={copy.engine.rules}
+            value={engine}
+            onChange={(v) => {
+              if (v === 'rules' || v === 'ai') setEngine(v);
+            }}
+            items={[
+              { value: 'rules', label: copy.lab.rules, disabled: running },
+              {
+                value: 'ai',
+                label: copy.lab.ai,
+                disabled:
+                  running ||
+                  !(health.data?.engines.groq || health.data?.engines.gemini),
+              },
+            ]}
+          />
+          <Button busy={running} onClick={() => void start()}>
+            {running ? copy.lab.running : copy.lab.run}
+          </Button>
+          <Button
+            variant="secondary"
+            disabled={!run || running}
+            onClick={() => setConfirm(true)}
+          >
+            <RotateCcw size={14} />
+            {copy.actions.reset}
+          </Button>
+        </div>
+      </div>
+      <div className="lab-progress">
+        <progress
+          value={total}
+          max={25}
+          aria-label={copy.lab.progress(total)}
+        />
+        <span className="numbers">{copy.lab.progress(total)}</span>
+      </div>
+      {waiting > 0 && (
+        <p className="meta" role="status">
+          {copy.lab.waiting(waiting)}
+        </p>
+      )}
+      {(error || query.isError) && (
+        <p className="field-error" role="alert">
+          {error || copy.errors.lab}
+        </p>
+      )}
+      <div className="stat-grid">
+        {tiles.map((tile) => (
+          <div className="stat-tile" key={tile.label}>
+            <span>{tile.label}</span>
+            <strong>{tile.value}</strong>
+          </div>
+        ))}
+      </div>
+      <p className="meta lab-disclaimer">{copy.academic}</p>
+      <Coverage data={data} />
+      <LabTables data={data} />
+      <Confirm
+        open={confirm}
+        onOpenChange={setConfirm}
+        title={copy.lab.reset}
+        onConfirm={() => void reset()}
+      />
+    </div>
+  );
 }
-function Coverage({data}:{data:TestRunView|undefined}){const labels=copy.lab.coverage;return <Card className="lab-coverage"><h2>{copy.headings.coverage}</h2><ul>{(data?.coverage??labels.map(label=>({label,pass:false}))).map(item=><li className={item.pass?'coverage-pass':''} key={item.label}>{item.pass?<Check size={16}/>:<CircleDashed size={16}/>}<span>{item.label}</span></li>)}</ul></Card>;}

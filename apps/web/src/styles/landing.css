@@ -1,0 +1,349 @@
+.hero {
+  text-align: center;
+  padding: 96px 0 64px;
+}
+.hero h1 {
+  font: 400 clamp(44px, 2.4rem + 3vw, 72px)/1.06 var(--font-display);
+  letter-spacing: -0.03em;
+  max-width: 900px;
+  margin: 0 auto 24px;
+}
+.hero > p {
+  font-size: 18px;
+  line-height: 28px;
+  color: var(--muted);
+  max-width: 640px;
+  margin: 0 auto 32px;
+  letter-spacing: -0.01em;
+}
+.hero .actions {
+  justify-content: center;
+}
+.hero .button,
+.closing-panel .button {
+  min-height: 48px;
+  padding: 0 24px;
+  font-size: 14px;
+}
+.hero-product {
+  padding: 48px 56px;
+  margin-bottom: 96px;
+}
+.demo-incident-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.demo-incident-header h2 {
+  font-size: 20px;
+  margin-bottom: 0;
+}
+.demo-columns {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 24px;
+  margin-top: 28px;
+}
+.demo-columns .card {
+  padding: 20px;
+}
+.demo-columns .timeline-item p {
+  font-size: 12px;
+}
+.demo-columns .timeline-title h3 {
+  font-size: 12px;
+}
+.demo-columns .timeline-title time {
+  font-size: 11px;
+}
+.demo-columns .evidence-stats span {
+  font-size: 10px;
+}
+.demo-columns .timeline li {
+  padding-bottom: 24px;
+}
+.demo-columns .timeline li:last-child {
+  padding-bottom: 0;
+}
+.feature-row {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  align-items: center;
+  gap: 80px;
+  padding: 96px 0;
+  border-top: 1px solid var(--line);
+}
+.feature-row > h2,
+.landing-section > h2,
+.closing-panel > h2 {
+  font: 400 clamp(32px, 1.6rem + 1.6vw, 44px)/1.1 var(--font-display);
+  letter-spacing: -0.025em;
+  margin: 0;
+  max-width: 380px;
+}
+.feature-row.reverse {
+  grid-template-columns: 1.2fr 0.8fr;
+}
+.feature-row.reverse > h2 {
+  order: 2;
+}
+.feature-row .cream-panel {
+  padding: 32px;
+}
+.feature-row .frame-body {
+  padding: 20px;
+}
+.feature-row .timeline-card,
+.feature-row .evidence-panel {
+  border: 0;
+  padding: 0;
+}
+.demo-text {
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.demo-text > .inline {
+  font-size: 12px;
+  color: var(--muted);
+}
+.demo-text p {
+  margin: 24px 0 0;
+  font-size: 18px;
+}
+.demo-report .understanding {
+  padding: 20px;
+}
+.demo-report .understanding dl > div {
+  margin-top: 14px;
+}
+.landing-section {
+  padding: 96px 0;
+  border-top: 1px solid var(--line);
+}
+.pipeline-section h2 {
+  max-width: none;
+  margin-bottom: 40px;
+}
+.pipeline-rail {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0;
+}
+.pipeline-rail li:not(.pipeline-arrow) {
+  padding: 10px 14px;
+  background: var(--cream);
+  border-radius: 999px;
+  font-size: 12px;
+}
+.pipeline-arrow {
+  display: flex;
+  color: var(--muted);
+}
+.limitations-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 48px;
+  margin: 32px 0 0;
+}
+.limitations-grid li {
+  border-bottom: 1px solid var(--line);
+  padding: 24px 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+.closing-panel {
+  text-align: center;
+  padding: 64px 24px;
+  margin-bottom: 96px;
+}
+.closing-panel h2 {
+  max-width: none;
+  margin-bottom: 28px;
+}
+.closing-panel .actions {
+  justify-content: center;
+}
+.about-page {
+  max-width: 840px;
+}
+.about-page > section {
+  border-top: 1px solid var(--line);
+  padding: 40px 0;
+}
+.about-page > section > h2 {
+  font: 400 30px/1.1 var(--font-display);
+  margin-bottom: 28px;
+}
+.about-page > .card {
+  padding: 24px;
+  border: 1px solid var(--line);
+}
+.about-page > .card > h2 {
+  font: 600 16px var(--font-sans);
+}
+.about-list {
+  margin: 0;
+}
+.about-list li {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+}
+.service-list {
+  margin: 0;
+}
+.service-list a {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+@media (max-width: 1023px) {
+  .feature-row,
+  .feature-row.reverse {
+    gap: 40px;
+    grid-template-columns: 1fr 1fr;
+  }
+  .hero-product {
+    padding: 32px;
+  }
+  .demo-columns {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .demo-columns .card {
+    padding: 16px;
+  }
+  .lab-coverage {
+    grid-template-columns: 1fr;
+  }
+  .feature-row .cream-panel {
+    padding: 24px;
+  }
+}
+@media (max-width: 767px) {
+  .hero {
+    padding: 64px 0 48px;
+  }
+  .hero > p {
+    font-size: 16px;
+    line-height: 26px;
+  }
+  .hero .actions {
+    gap: 8px;
+  }
+  .hero .button,
+  .closing-panel .button {
+    padding: 0 20px;
+    font-size: 12px;
+  }
+  .hero-product {
+    padding: 16px;
+    margin-bottom: 64px;
+  }
+  .demo-incident-header h2 {
+    font-size: 16px;
+  }
+  .demo-incident-header .type-tile {
+    width: 36px;
+    height: 36px;
+  }
+  .demo-columns {
+    grid-template-columns: 1fr;
+  }
+  .demo-columns .evidence-panel {
+    display: none;
+  }
+  .hero-product .frame-body {
+    padding: 16px;
+  }
+  .hero-product .escalation-path {
+    font-size: 10px;
+  }
+  .hero-product .escalation-path > span {
+    padding: 4px 6px;
+  }
+  .hero-product .timeline-card {
+    padding: 16px 8px;
+  }
+  .hero-product .timeline-title h3 {
+    font-size: 11px;
+  }
+  .hero-product .timeline-title time {
+    font-size: 10px;
+  }
+  .hero-product .timeline-item p {
+    font-size: 11px;
+  }
+  .feature-row,
+  .feature-row.reverse {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 64px 0;
+  }
+  .feature-row.reverse > h2 {
+    order: 0;
+  }
+  .feature-row > h2 {
+    max-width: 300px;
+  }
+  .feature-row .cream-panel {
+    padding: 20px;
+  }
+  .feature-row .frame-body {
+    padding: 16px;
+  }
+  .landing-section {
+    padding: 64px 0;
+  }
+  .limitations-grid {
+    grid-template-columns: 1fr;
+    margin-top: 24px;
+  }
+  .limitations-grid li {
+    padding: 20px 0;
+  }
+  .closing-panel {
+    padding: 48px 20px;
+    margin-bottom: 64px;
+  }
+  .lab-coverage ul {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .test-lab .page-title > .actions {
+    gap: 8px;
+  }
+  .test-lab .page-title > .actions > .button {
+    font-size: 12px;
+    padding: 0 12px;
+  }
+  .pipeline-rail {
+    gap: 6px;
+  }
+  .pipeline-rail li:not(.pipeline-arrow) {
+    font-size: 11px;
+    padding: 8px 12px;
+  }
+  .about-page > section > h2 {
+    font-size: 28px;
+  }
+}
+.map-marker[hidden] {
+  display: none !important;
+}
+.map-marker::before {
+  content: '';
+  position: absolute;
+  inset: -13px;
+  border-radius: 50%;
+  background: transparent;
+}

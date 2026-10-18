@@ -1,30 +1,258 @@
-import { describe,expect,it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import app from '../index';
 import { bindings } from './setup';
-import type { IncidentDetail,IncidentList,ReportNeedsInfo,ReportOk,TestRunCreated,TestRunView } from 'core';
+import type {
+  IncidentDetail,
+  IncidentList,
+  ReportNeedsInfo,
+  ReportOk,
+  TestRunCreated,
+  TestRunView,
+} from 'core';
 import { signDraft } from '../services/draft-token';
 import { analyzeReport } from 'core';
-const origin='https://safelens.test';
-const request=(path:string,body?:unknown,method='POST',extra={})=>app.request(origin+path,body===undefined?{method:'GET'}:{method,headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify(body)}, {...bindings,...extra});
-const report={text:'Two men on a motorbike keep circling near Clifton Block 5, looking suspicious',time:'10 minutes ago'};
-describe('report API with real D1',()=>{
- it('stores and deduplicates a report, then escalates the same incident',async()=>{const first=await request('/api/reports',report);expect(first.status).toBe(200);const data=await first.json<ReportOk>();expect(data).toMatchObject({outcome:'new',incident:{severity:1,reportCount:1}});const duplicate=await (await request('/api/reports',report)).json<ReportOk>();expect(duplicate.duplicate).toBe(true);const update=await (await request('/api/reports',{text:'کلفٹن میں دکان پر ڈکیتی ہوئی، دو لوگ پستول کے ساتھ تھے',time:'abhi'})).json<ReportOk>();expect(update).toMatchObject({outcome:'escalated',incident:{ref:data.incident.ref,severity:3,reportCount:2}});const detail=await (await request(`/api/incidents/${data.incident.ref}`)).json<IncidentDetail>();expect(detail.timeline.some(e=>e.kind==='escalated')).toBe(true);});
- it('holds missing details without writing and completes a signed follow-up',async()=>{const initial=await (await request('/api/reports',{text:'Someone broke into a house and stole jewellery',time:'abhi'})).json<ReportNeedsInfo>();expect(initial.missing).toEqual(['location']);expect(await bindings.DB.prepare('SELECT COUNT(*) AS n FROM reports').first('n')).toBe(0);const complete=await (await request('/api/reports',{draft:initial.draft,answers:{areaId:'saddar'}})).json<ReportOk>();expect(complete.report.areaId).toBe('saddar');expect(complete.outcome).toBe('new');});
- it('rejects forged and expired follow-ups',async()=>{expect((await request('/api/reports',{draft:'bad.token',answers:{}})).status).toBe(422);const result=analyzeReport(report.text,{},Date.now());if(result.status==='rejected')throw new Error('unexpected');const draft=await signDraft(result.stored,result.extraction,bindings.DRAFT_SECRET,Date.now()-1000000);expect((await request('/api/reports',{draft,answers:{areaId:'clifton'}})).status).toBe(422);});
- it('rejects accusations and short input, and redacts personal numbers',async()=>{expect((await request('/api/reports',{text:'Ali is a thief, he stole a bike in Clifton',time:'abhi'})).status).toBe(422);expect((await request('/api/reports',{text:'help'})).status).toBe(422);const r=await (await request('/api/reports',{text:'Mobile snatching in Saddar 10 minutes ago, call 0300-1234567'})).json<ReportOk>();expect(r.report.text).toContain('[phone removed]');expect(r.report.text).not.toContain('1234567');});
- it('writes status events, rejects unchanged status and reopens resolved incidents',async()=>{const first=await (await request('/api/reports',report)).json<ReportOk>();const url=`/api/incidents/${first.incident.ref}`;expect((await request(url,{status:'monitoring'},'PATCH')).status).toBe(200);expect((await request(url,{status:'monitoring'},'PATCH')).status).toBe(409);expect((await request(url,{status:'resolved'},'PATCH')).status).toBe(200);const next=await (await request('/api/reports',{text:'Suspicious activity still ongoing in Clifton',time:'abhi'})).json<ReportOk>();expect(next.incident.status).toBe('open');const d=await (await request(url)).json<IncidentDetail>();expect(d.timeline.some(e=>e.kind==='reopened')).toBe(true);expect(d.timeline.filter(e=>e.kind==='status_changed')).toHaveLength(2);});
- it('returns ETags without losing current incident data',async()=>{await request('/api/reports',report);const r=await request('/api/incidents');expect(r.headers.get('ETag')).toBeTruthy();const next=await app.request(origin+'/api/incidents',{headers:{'If-None-Match':r.headers.get('ETag')??''}},bindings);expect(next.status).toBe(304);});
+const origin = 'https://safelens.test';
+const request = (path: string, body?: unknown, method = 'POST', extra = {}) =>
+  app.request(
+    origin + path,
+    body === undefined
+      ? { method: 'GET' }
+      : {
+          method,
+          headers: { Origin: origin, 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        },
+    { ...bindings, ...extra },
+  );
+const report = {
+  text: 'Two men on a motorbike keep circling near Clifton Block 5, looking suspicious',
+  time: '10 minutes ago',
+};
+describe('report API with real D1', () => {
+  it('stores and deduplicates a report, then escalates the same incident', async () => {
+    const first = await request('/api/reports', report);
+    expect(first.status).toBe(200);
+    const data = await first.json<ReportOk>();
+    expect(data).toMatchObject({
+      outcome: 'new',
+      incident: { severity: 1, reportCount: 1 },
+    });
+    const duplicate = await (
+      await request('/api/reports', report)
+    ).json<ReportOk>();
+    expect(duplicate.duplicate).toBe(true);
+    const update = await (
+      await request('/api/reports', {
+        text: 'کلفٹن میں دکان پر ڈکیتی ہوئی، دو لوگ پستول کے ساتھ تھے',
+        time: 'abhi',
+      })
+    ).json<ReportOk>();
+    expect(update).toMatchObject({
+      outcome: 'escalated',
+      incident: { ref: data.incident.ref, severity: 3, reportCount: 2 },
+    });
+    const detail = await (
+      await request(`/api/incidents/${data.incident.ref}`)
+    ).json<IncidentDetail>();
+    expect(detail.timeline.some((e) => e.kind === 'escalated')).toBe(true);
+  });
+  it('holds missing details without writing and completes a signed follow-up', async () => {
+    const initial = await (
+      await request('/api/reports', {
+        text: 'Someone broke into a house and stole jewellery',
+        time: 'abhi',
+      })
+    ).json<ReportNeedsInfo>();
+    expect(initial.missing).toEqual(['location']);
+    expect(
+      await bindings.DB.prepare('SELECT COUNT(*) AS n FROM reports').first('n'),
+    ).toBe(0);
+    const complete = await (
+      await request('/api/reports', {
+        draft: initial.draft,
+        answers: { areaId: 'saddar' },
+      })
+    ).json<ReportOk>();
+    expect(complete.report.areaId).toBe('saddar');
+    expect(complete.outcome).toBe('new');
+  });
+  it('rejects forged and expired follow-ups', async () => {
+    expect(
+      (await request('/api/reports', { draft: 'bad.token', answers: {} }))
+        .status,
+    ).toBe(422);
+    const result = analyzeReport(report.text, {}, Date.now());
+    if (result.status === 'rejected') throw new Error('unexpected');
+    const draft = await signDraft(
+      result.stored,
+      result.extraction,
+      bindings.DRAFT_SECRET,
+      Date.now() - 1000000,
+    );
+    expect(
+      (await request('/api/reports', { draft, answers: { areaId: 'clifton' } }))
+        .status,
+    ).toBe(422);
+  });
+  it('rejects accusations and short input, and redacts personal numbers', async () => {
+    expect(
+      (
+        await request('/api/reports', {
+          text: 'Ali is a thief, he stole a bike in Clifton',
+          time: 'abhi',
+        })
+      ).status,
+    ).toBe(422);
+    expect((await request('/api/reports', { text: 'help' })).status).toBe(422);
+    const r = await (
+      await request('/api/reports', {
+        text: 'Mobile snatching in Saddar 10 minutes ago, call 0300-1234567',
+      })
+    ).json<ReportOk>();
+    expect(r.report.text).toContain('[phone removed]');
+    expect(r.report.text).not.toContain('1234567');
+  });
+  it('writes status events, rejects unchanged status and reopens resolved incidents', async () => {
+    const first = await (
+      await request('/api/reports', report)
+    ).json<ReportOk>();
+    const url = `/api/incidents/${first.incident.ref}`;
+    expect((await request(url, { status: 'monitoring' }, 'PATCH')).status).toBe(
+      200,
+    );
+    expect((await request(url, { status: 'monitoring' }, 'PATCH')).status).toBe(
+      409,
+    );
+    expect((await request(url, { status: 'resolved' }, 'PATCH')).status).toBe(
+      200,
+    );
+    const next = await (
+      await request('/api/reports', {
+        text: 'Suspicious activity still ongoing in Clifton',
+        time: 'abhi',
+      })
+    ).json<ReportOk>();
+    expect(next.incident.status).toBe('open');
+    const d = await (await request(url)).json<IncidentDetail>();
+    expect(d.timeline.some((e) => e.kind === 'reopened')).toBe(true);
+    expect(d.timeline.filter((e) => e.kind === 'status_changed')).toHaveLength(
+      2,
+    );
+  });
+  it('returns ETags without losing current incident data', async () => {
+    await request('/api/reports', report);
+    const r = await request('/api/incidents');
+    expect(r.headers.get('ETag')).toBeTruthy();
+    const next = await app.request(
+      origin + '/api/incidents',
+      { headers: { 'If-None-Match': r.headers.get('ETag') ?? '' } },
+      bindings,
+    );
+    expect(next.status).toBe(304);
+  });
 });
-describe('security middleware',()=>{
- it('blocks cross-origin mutations and non-JSON data',async()=>{expect((await app.request(origin+'/api/reports',{method:'POST',headers:{Origin:'https://wrong.test','Content-Type':'application/json'},body:'{}'},bindings)).status).toBe(403);expect((await app.request(origin+'/api/reports',{method:'POST',headers:{Origin:origin},body:'{}'},bindings)).status).toBe(415);});
- it('enforces body limits, rate limits and production secrets',async()=>{expect((await request('/api/reports',{text:'a'.repeat(17000)})).status).toBe(413);const rate=await request('/api/reports',report,'POST',{REPORT_LIMITER:{limit:async()=>({success:false})}});expect(rate.status).toBe(429);expect(rate.headers.get('Retry-After')).toBe('60');expect((await request('/api/reports',report,'POST',{ENVIRONMENT:'production'})).status).toBe(503);});
- it('returns protected responses without stack traces',async()=>{const r=await request('/api/unknown');expect(r.status).toBe(404);expect(r.headers.get('Content-Security-Policy')).toContain("frame-ancestors 'none'");expect(r.headers.get('X-Content-Type-Options')).toBe('nosniff');expect(await r.text()).not.toContain('stack');});
+describe('security middleware', () => {
+  it('blocks cross-origin mutations and non-JSON data', async () => {
+    expect(
+      (
+        await app.request(
+          origin + '/api/reports',
+          {
+            method: 'POST',
+            headers: {
+              Origin: 'https://wrong.test',
+              'Content-Type': 'application/json',
+            },
+            body: '{}',
+          },
+          bindings,
+        )
+      ).status,
+    ).toBe(403);
+    expect(
+      (
+        await app.request(
+          origin + '/api/reports',
+          { method: 'POST', headers: { Origin: origin }, body: '{}' },
+          bindings,
+        )
+      ).status,
+    ).toBe(415);
+  });
+  it('enforces body limits, rate limits and production secrets', async () => {
+    expect(
+      (await request('/api/reports', { text: 'a'.repeat(17000) })).status,
+    ).toBe(413);
+    const rate = await request('/api/reports', report, 'POST', {
+      REPORT_LIMITER: { limit: async () => ({ success: false }) },
+    });
+    expect(rate.status).toBe(429);
+    expect(rate.headers.get('Retry-After')).toBe('60');
+    expect(
+      (
+        await request('/api/reports', report, 'POST', {
+          ENVIRONMENT: 'production',
+        })
+      ).status,
+    ).toBe(503);
+  });
+  it('returns protected responses without stack traces', async () => {
+    const r = await request('/api/unknown');
+    expect(r.status).toBe(404);
+    expect(r.headers.get('Content-Security-Policy')).toContain(
+      "frame-ancestors 'none'",
+    );
+    expect(r.headers.get('X-Content-Type-Options')).toBe('nosniff');
+    expect(await r.text()).not.toContain('stack');
+  });
 });
-it('executes all 25 Test Lab reports, isolates live data, checks threads and resets',async()=>{
- const created=await (await request('/api/test-runs',{engine:'rules'})).json<TestRunCreated>();
- for(const id of created.order){const r=await request(`/api/test-runs/${created.runId}/steps`,{reportId:id});expect(r.status,id).toBe(200);}
- const results=await (await request(`/api/test-runs/${created.runId}`)).json<TestRunView>();expect(results.results).toHaveLength(25);expect(results.results.every(r=>r.pass)).toBe(true);expect(results.threads.every(r=>r.pass),JSON.stringify(results.threads.map(t=>t.differences))).toBe(true);expect(results.totals).toEqual({stored:23,held:2,threads:12,escalations:3});expect(results.coverage).toHaveLength(7);expect(results.coverage.every(c=>c.pass)).toBe(true);
- const live=await (await request('/api/incidents')).json<IncidentList>();expect(live.incidents).toHaveLength(0);
- expect((await request(`/api/test-runs/${created.runId}/steps`,{reportId:created.order[0]})).status).toBe(200);
- expect((await request(`/api/test-runs/${created.runId}`,{},'DELETE')).status).toBe(204);expect(await bindings.DB.prepare('SELECT COUNT(*) AS n FROM reports').first('n')).toBe(0);
+it('executes all 25 Test Lab reports, isolates live data, checks threads and resets', async () => {
+  const created = await (
+    await request('/api/test-runs', { engine: 'rules' })
+  ).json<TestRunCreated>();
+  for (const id of created.order) {
+    const r = await request(`/api/test-runs/${created.runId}/steps`, {
+      reportId: id,
+    });
+    expect(r.status, id).toBe(200);
+  }
+  const results = await (
+    await request(`/api/test-runs/${created.runId}`)
+  ).json<TestRunView>();
+  expect(results.results).toHaveLength(25);
+  expect(results.results.every((r) => r.pass)).toBe(true);
+  expect(
+    results.threads.every((r) => r.pass),
+    JSON.stringify(results.threads.map((t) => t.differences)),
+  ).toBe(true);
+  expect(results.totals).toEqual({
+    stored: 23,
+    held: 2,
+    threads: 12,
+    escalations: 3,
+  });
+  expect(results.coverage).toHaveLength(7);
+  expect(results.coverage.every((c) => c.pass)).toBe(true);
+  const live = await (await request('/api/incidents')).json<IncidentList>();
+  expect(live.incidents).toHaveLength(0);
+  expect(
+    (
+      await request(`/api/test-runs/${created.runId}/steps`, {
+        reportId: created.order[0],
+      })
+    ).status,
+  ).toBe(200);
+  expect(
+    (await request(`/api/test-runs/${created.runId}`, {}, 'DELETE')).status,
+  ).toBe(204);
+  expect(
+    await bindings.DB.prepare('SELECT COUNT(*) AS n FROM reports').first('n'),
+  ).toBe(0);
+});
+
+it('evaluates all 26 extra cases through isolated rules runs without storing reports',async()=>{
+ const created=await (await request('/api/test-runs',{engine:'rules',suite:'extra'})).json<TestRunCreated>();
+ expect(created.order).toHaveLength(26);
+ for(const reportId of created.order){const response=await request(`/api/test-runs/${created.runId}/steps`,{reportId});expect(response.status,reportId).toBe(200);const result=await response.json<import('core').ExtraEvaluationStep>();expect(result.pass,`${reportId}: ${result.differences.join('; ')}`).toBe(true);}
+ const completed=await (await request(`/api/test-runs/${created.runId}`)).json<import('core').ExtraRunView>();expect(completed.results).toHaveLength(26);expect(completed.results.filter(r=>r.status==='rejected')).toHaveLength(2);expect(await bindings.DB.prepare('SELECT COUNT(*) AS n FROM reports').first('n')).toBe(0);
 });

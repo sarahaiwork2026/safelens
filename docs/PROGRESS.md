@@ -4,11 +4,21 @@
 
 Read AGENTS.md, docs/PLAN.md and this file. Use the existing checkout. Do not create a worktree. Inspect git status before editing. Continue the first incomplete phase and rerun its gates. Never mark unrun checks complete.
 
-## Current work
+## Current status, 18 October 2026
 
-Phase 0 local gate passed. Phase 1 local fixture gate passed. Next: implement D1 persistence and secure API routes.
+All application features in Phases 0 to 8 are implemented. Phase 9 local hardening passed: 47 core/frontend tests, 25 real-D1 Worker tests, 27 browser tests, strict typecheck, lint, production build and zero-vulnerability production audit. Phase 10 commands and runbook are prepared; actual deployment and live-provider rehearsal remain external work. Hosted CI is configured but has not run.
 
-Validated: frozen-lockfile install, typecheck, lint, 1 fixture integrity test, 1 workerd health test, dev HTML response and /api/health. The command entries for later phases will gain implementations with their features.
+Fast 4G mobile Lighthouse passed on landing, report and incidents: performance 100/99/97, accessibility 100 throughout, best practices 100 throughout, LCP 777/930/763 ms. Initial JS is 129.4 KB gzip, CSS 18.1 KB gzip counting inline plus external copies, fonts 69.1 KB; initial map code is excluded. See performance-results.json. The earlier 1.6 Mbps, 150 ms run used Slow 4G; the final profile follows Chromium Fast4GConditions at 9 Mbps, 60 ms RTT with 4x CPU slowdown, matching the architecture.
+
+Preview: pnpm preview on port 4173, with the workerd backend on 4175. Development: pnpm dev on 5173. These processes were started in the current session and need restarting after restoration. Real screenshots are in docs/preview. Full browser validation uses a real production build, rules mode, local D1, and a fixture map style due the external tile restriction. Map failure fallback is also tested.
+
+Resume external work only after prerequisites are present: live Groq evaluation across all 51 fixtures, unlocked gazetteer verification, emergency-contact/free-tier rechecks, live tiles and timing, Cloudflare deployment, hosted CI and live rehearsal. No production URL or live AI pass is claimed. Keep the existing local implementation commits; do not reset to origin/main. A final Git bundle at /workspace/safelens-complete.bundle preserves the work independently of unverified local-commit restoration.
+
+Cloud setup install_script and start_skill have been saved in the environment draft. The draft also retains the tiles.openfreemap.org addition. The user must review and save settings, then publish the environment; saving the draft did not apply network access or publish a snapshot.
+
+## Earlier checkpoints
+
+The following phase notes record the progression and superseded intermediate failures. The current status above takes precedence.
 
 Cloud-only shell setup: export XDG_DATA_HOME=/workspace/.cache/data XDG_CACHE_HOME=/workspace/.cache XDG_CONFIG_HOME=/workspace/.cache/config PNPM_HOME=/workspace/.cache/pnpm-home WRANGLER_SEND_METRICS=false before pnpm. Dev service started on 5173.
 
@@ -66,3 +76,26 @@ Next: Phase 8 Test Lab UI, generated landing snapshot, landing and About.
 All app routes implemented. Landing displays real shared components from a generated C01 snapshot; a core test detects stale snapshots. Landing browser checks confirmed no API, map, Test Lab or report feature requests on load and valid CTAs. Responsive light/dark screenshots at 390px and 1440px passed axe and overflow checks. Test Lab browser run reached 25/25 report passes, 12 passing threads, 23 stored, 2 held, all seven real coverage checks, then reset cleared data. All 44 core/frontend tests and 18 Worker tests passed. Typecheck and lint passed.
 
 Next: Phase 9 full production-preview demo, follow-ups, all-route accessibility/keyboard/console checks, performance, audit and README. Phase 10 deployment remains deferred under the user local-first choice.
+
+## Phase 9 in progress
+
+Production preview initially failed because the ephemeral development signing key was generated at module scope. Moved randomness into request-time key creation. The exact seven-step demo then passed against the production preview, along with follow-ups and the real Test Lab.
+
+The first full preview run had 20 passing and 6 failing browser checks. Diagnosed failures: duplicate Map regions, keyboard-inaccessible empty Test Lab scroll tables, and a forced click on an out-of-viewport map marker. Corrected semantic regions and table focus, and now hide out-of-view markers and click an in-view marker without force. A new full run is in progress, not yet claimed passing.
+
+Latest bundle: 138.1 KB initial JS gzip, 8.5 KB CSS gzip, 69.1 KB fonts, map excluded. Production audit: zero vulnerabilities. Remaining: finish extra AI evaluation script support, performance execution, final checks, documentation/CI verification, reusable cloud instructions and final commit. Local-first deployment remains deferred.
+
+Current cloud processes: development server started by the agent on 5173. Playwright starts/stops its own production preview on 4173. Shell commands need the cache exports recorded above. Browser executable is preinstalled /usr/bin/chromium. Do not retry the blocked Playwright download.
+
+Performance investigation: raw Vite preview omitted edge compression, causing 4 to 6 second simulated LCP. Added a transparent gzip proxy around the actual workerd preview, preserving API methods, origins and security headers. Split confirmation dialogs out of the initial UI module, preloaded both fonts, reserved full page height, and added route module preloads plus real API warmup outside the landing route. The initial compressed run improved LCP but still missed 2 seconds. Found Zod's caught eval probe behind the report CSP inspector issue; switched its supported jitless mode on and separated pure enum constants from validation so browsers do not load Zod for a select. Current performance rerun is pending; do not claim the performance gate passed.
+
+Extra evaluation now supports all 26 cases through isolated extraction-only runs, and eval-llm scores both suites. 47 core/frontend tests and 25 Worker tests passed, including provider flag rejection, fallback, repair-budget counting, Turnstile checks, geocoder cache/gate and all extra API cases.
+
+
+## Phase 9 final local checkpoint
+
+Prerendered the three entry pages from the real React routes, with safe hydration, no inline JavaScript and a disabled report fieldset until ready. Initial CSS and font preloads remove render blocking, while query warmup is limited to non-landing routes. Landing remains free of API, map and report-feature requests. A JavaScript-disabled browser test proves entry HTML is useful.
+
+Final full browser run: 27 passed in 2.2 minutes. This includes the exact seven-step demonstration, four languages and Urdu RTL, all missing-field follow-ups, report grouping/escalation, status events, all severity alerts, Test Lab 25/25 and seven coverage checks, map selection/fallback, keyboard reporting, offline retention, and every route with zero axe violations and zero browser console warnings/errors in both schemes. Responsive checks cover 320, 390 and 1440 px; reduced motion is exercised.
+
+Frozen installation, development health plus D1 list requests, production preview, typecheck, lint, 72 unit/Worker tests, audit and mobile performance all passed. Production credentials, external map tiles and live model scores remain unrun, as required by the local-first decision.

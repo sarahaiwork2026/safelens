@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-18",
+  "target": "Production build served locally by workerd with text compression",
+  "profile": {
+    "viewport": "390x844",
+    "rttMs": 60,
+    "throughputKbps": 9000,
+    "cpuSlowdownMultiplier": 4
+  },
+  "results": [
+    {
+      "route": "/",
+      "performance": 100,
+      "accessibility": 100,
+      "bestPractices": 100,
+      "lcpMs": 777
+    },
+    {
+      "route": "/report",
+      "performance": 99,
+      "accessibility": 100,
+      "bestPractices": 100,
+      "lcpMs": 930
+    },
+    {
+      "route": "/incidents",
+      "performance": 97,
+      "accessibility": 100,
+      "bestPractices": 100,
+      "lcpMs": 763
+    }
+  ],
+  "bundle": {
+    "initialJsGzipKb": 129.4,
+    "initialCssGzipKb": 18.1,
+    "fontKb": 69.1,
+    "initialMapCode": false
+  }
+}

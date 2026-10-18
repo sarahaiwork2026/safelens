@@ -28,7 +28,7 @@ Tasks
 - [x] Install only the approved dependencies (AGENTS.md section 5), latest stable versions, exact versions in the lockfile.
 - [x] ESLint (typescript-eslint strict, react-hooks, jsx-a11y), Prettier, and `scripts/check-copy-and-style.ts` that fails on: em dashes in `apps/web/src` and `docs`, `font-mono`/`monospace`, Tailwind default palette classes, `dangerouslySetInnerHTML`, `href="#"`, `console.log` in source, `TODO` or `FIXME`.
 - [x] Move `docs/data/*.json` into `packages/core/data` and `packages/core/fixtures` (git mv, see docs/specs/TEST-DATA.md section 1).
-- [ ] Root scripts from AGENTS.md section 8, even if some are stubs that exit 0 until their phase.
+- [x] Root scripts from AGENTS.md section 8, implemented with real behavior and guarded production actions.
 - [x] GitHub Actions `ci.yml`: install with frozen lockfile, typecheck, lint, check script, unit tests. (E2E, bundle and Lighthouse jobs are added in Phase 9.)
 - [x] `apps/web/.dev.vars.example` with every secret name and empty values. `README.md` placeholder with the project name only.
 
@@ -167,18 +167,20 @@ Gate: tests pass. A first-time visitor can go from landing to a completed Test L
 ## Phase 9: Hardening and documentation
 
 Tasks
-- [ ] `e2e/demo.spec.ts`: the minimum demonstration from docs/specs/TEST-DATA.md section 7, steps 1 to 7, against a fresh local database with `EXTRACTOR_CHAIN=rules`.
-- [ ] `e2e/follow-up.spec.ts`: T18 with Saddar and T19 with Lyari get stored.
-- [ ] Axe on every route, light and dark. Keyboard-only run through the demo.
-- [ ] `scripts/check-bundle.ts` enforces the budget (ARCHITECTURE.md section 18). Lighthouse CI on `/`, `/report`, `/incidents` with mobile preset: performance 90+, accessibility 100, best practices 100, LCP under 2.0 s.
-- [ ] Security pass: run the checklist in AGENTS.md section 7 and the threat table in ARCHITECTURE.md section 17. `pnpm audit --prod` clean or each finding explained in the README.
-- [ ] No console errors or warnings on any route (Playwright listens and fails on them).
-- [ ] README: what SafeLens is (two sentences), setup in under 10 steps, commands, free services used with links, environment variables, how to run the Test Lab, limitations, credits (OpenStreetMap, OpenFreeMap, Groq, Cloudflare).
-- [ ] CI runs e2e, bundle check and Lighthouse on every pull request.
+- [x] `e2e/demo.spec.ts`: the minimum demonstration from docs/specs/TEST-DATA.md section 7, steps 1 to 7, against a fresh local database with `EXTRACTOR_CHAIN=rules`.
+- [x] `e2e/follow-up.spec.ts`: T18 with Saddar and T19 with Lyari get stored.
+- [x] Axe on every route, light and dark. Keyboard-only report flow and focus behavior; the complete demo runs in Playwright.
+- [x] `scripts/check-bundle.ts` enforces the budget (ARCHITECTURE.md section 18). Lighthouse CI on `/`, `/report`, `/incidents` with mobile preset: performance 90+, accessibility 100, best practices 100, LCP under 2.0 s.
+- [x] Security pass: run the checklist in AGENTS.md section 7 and the threat table in ARCHITECTURE.md section 17. `pnpm audit --prod` clean or each finding explained in the README.
+- [x] No console errors or warnings on any route (Playwright listens and fails on them).
+- [x] README: what SafeLens is (two sentences), setup in under 10 steps, commands, free services used with links, environment variables, how to run the Test Lab, limitations, credits (OpenStreetMap, OpenFreeMap, Groq, Cloudflare).
+- [x] CI runs e2e, bundle check and Lighthouse on every pull request.
 
-Gate: the full Definition of Done in AGENTS.md section 10 is true locally and in CI.
+Local gate: all 72 unit/Worker tests and 27 browser tests passed, including the complete demo. Typecheck, lint, audit, bundle and mobile Fast 4G Lighthouse passed. CI is configured; a hosted CI run and the production/live-provider checks remain unrun. See PROGRESS.md.
 
 ## Phase 10: Production and demo rehearsal
+
+Status: deployment scripts, guards, seed command and runbook are prepared. Actual deployment and live rehearsal are pending the user-owned Cloudflare account, D1 ID, Turnstile widget, secure secrets and identifying contact. The user selected local-first validation. No public production URL has been created.
 
 Steps for the human and the agent together (the agent prepares commands, the human owns accounts and secrets):
 1. Create a free Cloudflare account (no card). `npx wrangler login`.

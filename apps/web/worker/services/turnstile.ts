@@ -1,4 +1,45 @@
 import type { Env } from '../env';
 import { ApiError } from './errors';
-export function configured(env:Env):boolean {return env.ENVIRONMENT!=='production'||Boolean(env.DRAFT_SECRET&&env.IP_HASH_SALT&&env.TURNSTILE_SECRET_KEY);}
-export async function verifyTurnstile(env:Env,token?:string){if(env.ENVIRONMENT!=='production'&&!env.TURNSTILE_SECRET_KEY)return;if(!token||!env.TURNSTILE_SECRET_KEY)throw new ApiError(403,'captcha_failed',"Couldn't verify this browser. Try again.");try{const response=await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify',{method:'POST',body:new URLSearchParams({secret:env.TURNSTILE_SECRET_KEY,response:token}),signal:AbortSignal.timeout(8000)});const value:unknown=await response.json();if(!response.ok||!value||typeof value!=='object'||!('success' in value)||value.success!==true)throw new Error('invalid');}catch{throw new ApiError(403,'captcha_failed',"Couldn't verify this browser. Try again.");}}
+export function configured(env: Env): boolean {
+  return (
+    env.ENVIRONMENT !== 'production' ||
+    Boolean(env.DRAFT_SECRET && env.IP_HASH_SALT && env.TURNSTILE_SECRET_KEY)
+  );
+}
+export async function verifyTurnstile(env: Env, token?: string) {
+  if (env.ENVIRONMENT !== 'production' && !env.TURNSTILE_SECRET_KEY) return;
+  if (!token || !env.TURNSTILE_SECRET_KEY)
+    throw new ApiError(
+      403,
+      'captcha_failed',
+      "Couldn't verify this browser. Try again.",
+    );
+  try {
+    const response = await fetch(
+      'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+      {
+        method: 'POST',
+        body: new URLSearchParams({
+          secret: env.TURNSTILE_SECRET_KEY,
+          response: token,
+        }),
+        signal: AbortSignal.timeout(8000),
+      },
+    );
+    const value: unknown = await response.json();
+    if (
+      !response.ok ||
+      !value ||
+      typeof value !== 'object' ||
+      !('success' in value) ||
+      value.success !== true
+    )
+      throw new Error('invalid');
+  } catch {
+    throw new ApiError(
+      403,
+      'captcha_failed',
+      "Couldn't verify this browser. Try again.",
+    );
+  }
+}

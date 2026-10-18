@@ -1,9 +1,145 @@
-import { expect,test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import AxeBuilder from '@axe-core/playwright';
-test.afterEach(async({page})=>{if(await page.getByRole('alertdialog').isVisible())await page.getByRole('button',{name:'Dismiss',exact:true}).click();});
-const examples=[{chip:'English',language:'English',text:'Suspicious activity in Clifton right now'},{chip:'اردو',language:'Urdu',text:'کلفٹن میں دکان پر ڈکیتی ہوئی، دو لوگ پستول کے ساتھ تھے'},{chip:'Roman Urdu',language:'Roman Urdu',text:'Clifton mein do bike wale log mashkook hain abhi'},{chip:'Mixed',language:'Mixed',text:'Lyari میں firing ہو رہی ہے، log bhaag rahe hain'}];
-for(const example of examples)test(`report extraction in ${example.language}`,async({page})=>{await page.goto('/report');await page.getByLabel('What happened').fill(example.text);await page.getByLabel('When',{exact:true}).fill('abhi');await page.getByRole('button',{name:'Analyze report',exact:true}).click();if(await page.getByRole('alertdialog').isVisible())await page.getByRole('button',{name:'Dismiss',exact:true}).click();await expect(page.getByRole('heading',{name:'Report analyzed'})).toBeVisible();await expect(page.locator('.structured-result').getByText(example.language,{exact:true})).toBeVisible();await expect(page.locator('.structured-result').getByText('Local rules')).toBeVisible();if(example.language==='Urdu'){expect(await page.getByLabel('What happened').evaluate(el=>getComputedStyle(el).direction)).toBe('rtl');}expect((await new AxeBuilder({page}).analyze()).violations).toEqual([]);});
-test('missing location asks only for area and stores the signed follow-up',async({page})=>{await page.goto('/report');await page.getByLabel('What happened').fill('Someone broke into a house and stole jewellery');await page.getByLabel('When',{exact:true}).fill('abhi');await page.getByRole('button',{name:'Analyze report'}).click();await expect(page.getByRole('heading',{name:'A few details missing'})).toBeVisible();await expect(page.locator('.follow-up').getByLabel('When')).toHaveCount(0);await expect(page.locator('.follow-up').getByLabel('Type')).toHaveCount(0);await page.locator('.follow-up').getByRole('combobox',{name:'Area'}).click();await page.getByPlaceholder('Search areas').fill('Saddar');await page.getByRole('option').first().click();await page.getByRole('button',{name:'Continue',exact:true}).click();if(await page.getByRole('alertdialog').isVisible())await page.getByRole('button',{name:'Dismiss',exact:true}).click();await expect(page.getByRole('heading',{name:'Report analyzed'})).toBeVisible();await expect(page.locator('.structured-result').getByText('Saddar',{exact:true})).toBeVisible();});
-test('short input shows a visible validation message and retains text',async({page})=>{await page.goto('/report');await page.getByLabel('What happened').fill('help');await page.getByRole('button',{name:'Analyze report'}).click();await expect(page.getByText('Add a few more words about what happened.')).toBeVisible();await expect(page.getByLabel('What happened')).toHaveValue('help');});
-test('missing time and type produce only the needed follow-up fields',async({page})=>{await page.goto('/report');await page.getByLabel('What happened').fill('Strange man standing near Clifton gate for an hour');await page.getByRole('button',{name:'Analyze report'}).click();await expect(page.locator('.follow-up').getByLabel('When')).toBeVisible();await expect(page.locator('.follow-up').getByRole('combobox',{name:'Area'})).toHaveCount(0);await page.goto('/report');await page.getByLabel('What happened').fill('Kya koi bata sakta hai aaj traffic kaisa hai');await page.getByRole('combobox',{name:'Area'}).click();await page.getByPlaceholder('Search areas').fill('Saddar');await page.getByRole('option').first().click();await page.getByLabel('When',{exact:true}).fill('abhi');await page.getByRole('button',{name:'Analyze report'}).click();await expect(page.locator('.follow-up').getByLabel('Type')).toBeVisible();await expect(page.locator('.follow-up').getByLabel('When')).toHaveCount(0);});
-test('report layout at mobile and desktop sizes',async({page},testInfo)=>{for(const width of [390,1440]){await page.setViewportSize({width,height:1000});await page.goto('/report');await page.getByRole('button',{name:'Roman Urdu',exact:true}).click();await page.getByLabel('When',{exact:true}).fill('abhi');await expect(page.locator('.understanding').getByText('Clifton')).toBeVisible();await page.screenshot({path:testInfo.outputPath(`report-${width}.png`),fullPage:true});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}});
+test.afterEach(async ({ page }) => {
+  if (await page.getByRole('alertdialog').isVisible())
+    await page.getByRole('button', { name: 'Dismiss', exact: true }).click();
+});
+const examples = [
+  {
+    chip: 'English',
+    language: 'English',
+    text: 'Suspicious activity in Clifton right now',
+  },
+  {
+    chip: 'اردو',
+    language: 'Urdu',
+    text: 'کلفٹن میں دکان پر ڈکیتی ہوئی، دو لوگ پستول کے ساتھ تھے',
+  },
+  {
+    chip: 'Roman Urdu',
+    language: 'Roman Urdu',
+    text: 'Clifton mein do bike wale log mashkook hain abhi',
+  },
+  {
+    chip: 'Mixed',
+    language: 'Mixed',
+    text: 'Lyari میں firing ہو رہی ہے، log bhaag rahe hain',
+  },
+];
+for (const example of examples)
+  test(`report extraction in ${example.language}`, async ({ page }) => {
+    await page.goto('/report');
+    await page.getByLabel('What happened').fill(example.text);
+    await page.getByLabel('When', { exact: true }).fill('abhi');
+    await page
+      .getByRole('button', { name: 'Analyze report', exact: true })
+      .click();
+    if (await page.getByRole('alertdialog').isVisible())
+      await page.getByRole('button', { name: 'Dismiss', exact: true }).click();
+    await expect(
+      page.getByRole('heading', { name: 'Report analyzed' }),
+    ).toBeVisible();
+    await expect(
+      page
+        .locator('.structured-result')
+        .getByText(example.language, { exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.locator('.structured-result').getByText('Local rules'),
+    ).toBeVisible();
+    if (example.language === 'Urdu') {
+      expect(
+        await page
+          .getByLabel('What happened')
+          .evaluate((el) => getComputedStyle(el).direction),
+      ).toBe('rtl');
+    }
+    expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  });
+test('missing location asks only for area and stores the signed follow-up', async ({
+  page,
+}) => {
+  await page.goto('/report');
+  await page
+    .getByLabel('What happened')
+    .fill('Someone broke into a house and stole jewellery');
+  await page.getByLabel('When', { exact: true }).fill('abhi');
+  await page.getByRole('button', { name: 'Analyze report' }).click();
+  await expect(
+    page.getByRole('heading', { name: 'A few details missing' }),
+  ).toBeVisible();
+  await expect(page.locator('.follow-up').getByLabel('When')).toHaveCount(0);
+  await expect(page.locator('.follow-up').getByLabel('Type')).toHaveCount(0);
+  await page
+    .locator('.follow-up')
+    .getByRole('combobox', { name: 'Area' })
+    .click();
+  await page.getByPlaceholder('Search areas').fill('Saddar');
+  await page.getByRole('option').first().click();
+  await page.getByRole('button', { name: 'Continue', exact: true }).click();
+  if (await page.getByRole('alertdialog').isVisible())
+    await page.getByRole('button', { name: 'Dismiss', exact: true }).click();
+  await expect(
+    page.getByRole('heading', { name: 'Report analyzed' }),
+  ).toBeVisible();
+  await expect(
+    page.locator('.structured-result').getByText('Saddar', { exact: true }),
+  ).toBeVisible();
+});
+test('short input shows a visible validation message and retains text', async ({
+  page,
+}) => {
+  await page.goto('/report');
+  await page.getByLabel('What happened').fill('help');
+  await page.getByRole('button', { name: 'Analyze report' }).click();
+  await expect(
+    page.getByText('Add a few more words about what happened.'),
+  ).toBeVisible();
+  await expect(page.getByLabel('What happened')).toHaveValue('help');
+});
+test('missing time and type produce only the needed follow-up fields', async ({
+  page,
+}) => {
+  await page.goto('/report');
+  await page
+    .getByLabel('What happened')
+    .fill('Strange man standing near Clifton gate for an hour');
+  await page.getByRole('button', { name: 'Analyze report' }).click();
+  await expect(page.locator('.follow-up').getByLabel('When')).toBeVisible();
+  await expect(
+    page.locator('.follow-up').getByRole('combobox', { name: 'Area' }),
+  ).toHaveCount(0);
+  await page.goto('/report');
+  await page
+    .getByLabel('What happened')
+    .fill('Kya koi bata sakta hai aaj traffic kaisa hai');
+  await page.getByRole('combobox', { name: 'Where' }).click();
+  await page.getByPlaceholder('Search areas').fill('Saddar');
+  await page.getByRole('option').first().click();
+  await page.getByLabel('When', { exact: true }).fill('abhi');
+  await page.getByRole('button', { name: 'Analyze report' }).click();
+  await expect(page.locator('.follow-up').getByLabel('Type')).toBeVisible();
+  await expect(page.locator('.follow-up').getByLabel('When')).toHaveCount(0);
+});
+test('report layout at mobile and desktop sizes', async ({
+  page,
+}, testInfo) => {
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await page.goto('/report');
+    await page.getByRole('button', { name: 'Roman Urdu', exact: true }).click();
+    await page.getByLabel('When', { exact: true }).fill('abhi');
+    await expect(
+      page.locator('.understanding').getByText('Clifton'),
+    ).toBeVisible();
+    await page.screenshot({
+      path: testInfo.outputPath(`report-${width}.png`),
+      fullPage: true,
+    });
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+  }
+});

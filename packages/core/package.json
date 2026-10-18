@@ -7,7 +7,8 @@
     ".": "./src/index.ts",
     "./evaluation": "./src/evaluation.ts",
     "./prompt": "./src/prompt.ts",
-    "./llm-schema": "./src/llm-schema.ts"
+    "./llm-schema": "./src/llm-schema.ts",
+    "./extra-evaluation": "./src/extra-evaluation.ts"
   },
   "scripts": {
     "test": "vitest run test"

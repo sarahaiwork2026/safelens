@@ -130,21 +130,21 @@ Shared logic lives in `packages/core` and nowhere else. The browser uses it for 
 
 Details in docs/ARCHITECTURE.md section 17. All must be true before Phase 9 ends.
 
-- [ ] Secrets only in Worker secrets and `.dev.vars` (git-ignored). No secret in any `VITE_` variable, in the client bundle, in logs or in `/api/health`.
-- [ ] Turnstile verified on the first `POST /api/reports` in production. Follow-ups use the HMAC-signed, expiring draft token.
-- [ ] Rate limits on reports and on the whole API, keyed by a salted hash of the IP. Raw IPs are never stored or logged.
-- [ ] `Origin` check and `Content-Type: application/json` required on every POST, PATCH and DELETE. Body limit 16 KB.
-- [ ] Prepared statements with `.bind()` for every query.
-- [ ] Phone and CNIC redaction before LLM calls and storage. Bidi controls stripped. Report text never logged.
-- [ ] Prompt injection defenses: delimiters, data-only instruction, strict schema, Zod, output guards, server-side missing fields.
-- [ ] No `dangerouslySetInnerHTML`. LLM text rendered as plain text only.
-- [ ] Security headers and CSP on all responses (API middleware and `public/_headers`).
-- [ ] Daily LLM budget, cooldown on 429, AI Test Lab cap.
-- [ ] Accusation and hate reports rejected before storage. `identifying_details` hides raw text in public views.
-- [ ] Test Lab runs isolated per dataset and cleaned up after one hour.
-- [ ] Errors return `{ error: { code, message } }` without stack traces.
-- [ ] `pnpm audit --prod` reviewed. Lockfile committed. No new dependency outside section 5.
-- [ ] Nominatim used only as a cached fallback at 1 request per second with an identifying User-Agent. Map attribution visible.
+- [x] Secrets only in Worker secrets and `.dev.vars` (git-ignored). No secret in any `VITE_` variable, in the client bundle, in logs or in `/api/health`.
+- [x] Turnstile verified on the first `POST /api/reports` in production. Follow-ups use the HMAC-signed, expiring draft token.
+- [x] Rate limits on reports and on the whole API, keyed by a salted hash of the IP. Raw IPs are never stored or logged.
+- [x] `Origin` check and `Content-Type: application/json` required on every POST, PATCH and DELETE. Body limit 16 KB.
+- [x] Prepared statements with `.bind()` for every query.
+- [x] Phone and CNIC redaction before LLM calls and storage. Bidi controls stripped. Report text never logged.
+- [x] Prompt injection defenses: delimiters, data-only instruction, strict schema, Zod, output guards, server-side missing fields.
+- [x] No `dangerouslySetInnerHTML`. LLM text rendered as plain text only.
+- [x] Security headers and CSP on all responses (API middleware and `public/_headers`).
+- [x] Daily LLM budget, cooldown on 429, AI Test Lab cap.
+- [x] Accusation and hate reports rejected before storage. `identifying_details` hides raw text in public views.
+- [x] Test Lab runs isolated per dataset and cleaned up after one hour.
+- [x] Errors return `{ error: { code, message } }` without stack traces.
+- [x] `pnpm audit --prod` reviewed. Lockfile committed. No new dependency outside section 5.
+- [x] Nominatim used only as a cached fallback at 1 request per second with an identifying User-Agent. Map attribution visible.
 
 ## 8. Commands
 
