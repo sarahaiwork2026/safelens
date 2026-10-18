@@ -1,0 +1,11 @@
+{
+  "checkedAt": "2026-10-18T23:15:38.160Z",
+  "/": 200,
+  "/incidents": 200,
+  "/about": 200,
+  "/map": 200,
+  "mapFallback": 0,
+  "mapCanvas": 1,
+  "browserErrors": [],
+  "failedHosts": []
+}

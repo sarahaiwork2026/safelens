@@ -180,7 +180,7 @@ Local gate: all 72 unit/Worker tests and 28 browser tests passed, including the 
 
 ## Phase 10: Production and demo rehearsal
 
-Status: deployment scripts, guards, seed command and runbook are prepared. Actual deployment and live rehearsal are pending the user-owned Cloudflare account, D1 ID, Turnstile widget, secure secrets and identifying contact. The user selected local-first validation. No public production URL has been created.
+Status, 19 October 2026 in Asia/Karachi: deployed at https://safelens.sarah-aiwork2026.workers.dev on the existing Cloudflare account. D1 is migrated; production Turnstile, signing and IP hashing secrets are configured; Groq is installed as a runtime secret through the connected GitHub build. Hosted rules Test Lab passed 25/25 and all seven coverage checks. Base field checks and all 26 extra cases passed with the provider chain, but the strict pure-AI gate did not pass because fallback handled some cases. Real map tiles and four-language Groq responses were verified. Automated Turnstile completion is blocked by this environment's access to the challenge subdomain. Hosted performance, live dataset seeding and manual rehearsal remain unclaimed. See docs/production/README.md.
 
 Steps for the human and the agent together (the agent prepares commands, the human owns accounts and secrets):
 1. Create a free Cloudflare account (no card). `npx wrangler login`.

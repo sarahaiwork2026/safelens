@@ -2,6 +2,12 @@
 
 SafeLens turns community reports in English, Urdu, Roman Urdu and mixed language into structured incidents with related reports, escalation and claim-level evidence. This academic prototype makes uncertainty visible and complements official emergency services.
 
+## Live app
+
+Open **https://safelens.sarah-aiwork2026.workers.dev**. The frontend, Worker API, D1 database, real map tiles, Turnstile and Groq runtime secret are deployed. Rules fallback remains available when the AI provider cannot respond.
+
+Production checks: the browser Rules Test Lab passed 25/25 and all seven coverage checks. The full 51-case provider-chain evaluation matched the required output checks; 22 cases used Groq, including all four input languages. The stricter all-AI gate did not pass because the remaining eligible cases used fallback. Automated report submission was blocked by this environment's access to Turnstile's challenge subdomain, so no claim of automated end-to-end Turnstile completion is made. See [production checks](docs/production/README.md).
+
 ## Local setup
 
 Install Node 24, then run these commands in your own terminal:
@@ -127,7 +133,7 @@ The incident.io screenshots are visual references only. SafeLens uses its own wo
 
 The prototype uses simulated reports. AI may misunderstand unclear or mixed-language text; location depends on user input, and external services require connectivity. Alerts are basic in-app alerts with unverified information, not emergency notifications. SafeLens complements official emergency services and does not replace them.
 
-Live Groq scores, extra AI evaluation, unlocked-coordinate verification, emergency-contact rechecking, real tile timing and production deployment remain external checks. `eval:llm` records base scores plus extra-case comparisons in isolated datasets and fails if provider fallback replaces the live AI check. See PROGRESS.md for executed checks and current blockers.
+Production is deployed and the full provider-chain evaluation has run. The pure-AI threshold, unlocked-coordinate verification, emergency-contact rechecking and hosted performance timing remain follow-up checks. `eval:llm` records base scores plus extra-case comparisons in isolated datasets and fails if provider fallback replaces the live AI check. See PROGRESS.md for executed checks and current blockers.
 
 Production dependency audit found zero vulnerabilities. The approved Cloudflare Worker test package is deprecated upstream; its embedded runtime uses the documented test compatibility-date override. The application's production configuration uses its creation date. No alternative test dependency was introduced without approval.
 
@@ -153,7 +159,7 @@ Actual app captures: [overview](docs/preview/overview.png), [report](docs/previe
 
 ![SafeLens application preview](docs/preview/overview.png)
 
-## Review checkpoint, 18 October 2026
+## Earlier local review checkpoint, 18 October 2026 (superseded by Live app above)
 
 The user requested review before any GitHub push or production deployment. Neither has been performed. Cloudflare account-token authentication and Groq authentication passed. Three direct live Groq adapter checks returned valid English, Urdu and Roman Urdu extractions; the fourth request reached the free-tier cooldown. This is not the full AI evaluation.
 

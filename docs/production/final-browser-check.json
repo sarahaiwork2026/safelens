@@ -1,0 +1,10 @@
+{
+  "checkedAt": "2026-10-18T23:20:53.126Z",
+  "report": "Turnstile did not finish in the automated browser",
+  "mapCTA": "Passed at 320 and 1440, light and dark, keyboard navigation",
+  "browserErrors": [],
+  "failedHosts": [
+    "brunhild.challenges.cloudflare.com: net::ERR_TUNNEL_CONNECTION_FAILED",
+    "tiles.openfreemap.org: net::ERR_ABORTED"
+  ]
+}
