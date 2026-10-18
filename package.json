@@ -8,7 +8,8 @@
     "node": ">=22"
   },
   "scripts": {
-    "dev": "pnpm --filter web dev",
+    "setup": "npx --yes pnpm@11.25.0 install --frozen-lockfile",
+    "dev": "node scripts/dev.mjs",
     "build": "pnpm --filter web build && pnpm --filter web exec tsx --tsconfig ../../tsconfig.json scripts/prerender.tsx && tsx scripts/prepare-assets.ts",
     "preview": "tsx scripts/preview.ts",
     "typecheck": "tsc --noEmit",

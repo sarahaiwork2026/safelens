@@ -6,6 +6,10 @@ Read AGENTS.md, docs/PLAN.md and this file. Use the existing checkout. Do not cr
 
 ## Current status, 18 October 2026
 
+Latest authorization: the user now explicitly requests pushing all code to GitHub and a usable local or public demo. This supersedes the earlier hold on pushing/deployment. Added npm run setup and npm run dev for portable first startup. Setup installs the pinned pnpm workspace; dev preserves existing .dev.vars, creates missing local configuration, applies local migrations and starts Vite with the Worker. Both npm commands were executed successfully, health returned ok:true, typecheck and lint passed.
+
+Cloudflare deployment access was checked. The account has no workers.dev subdomain; Cloudflare returned 404 with an instruction to open Workers & Pages once. Creating the first subdomain with this account-token authentication returned 405. The user has been asked to open that page. No remote database or widget was created by the blocked attempt. Vercel is not configured and cannot directly host this Cloudflare D1 Worker implementation.
+
 All application features in Phases 0 to 8 are implemented. Phase 9 local hardening passed: 47 core/frontend tests, 25 real-D1 Worker tests, 28 browser tests, strict typecheck, lint, production build and zero-vulnerability production audit. Phase 10 commands and runbook are prepared; the user explicitly requires app review before any GitHub push or deployment. Full live-provider rehearsal remains external work. Hosted CI is configured but has not run.
 
 Fast 4G mobile Lighthouse passed on landing, report and incidents: performance 100/99/97, accessibility 100 throughout, best practices 100 throughout, LCP 777/930/763 ms. Initial JS is 129.4 KB gzip, CSS 18.1 KB gzip counting inline plus external copies, fonts 69.1 KB; initial map code is excluded. See performance-results.json. The earlier 1.6 Mbps, 150 ms run used Slow 4G; the final profile follows Chromium Fast4GConditions at 9 Mbps, 60 ms RTT with 4x CPU slowdown, matching the architecture.

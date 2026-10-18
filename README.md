@@ -4,10 +4,25 @@ SafeLens turns community reports in English, Urdu, Roman Urdu and mixed language
 
 ## Local setup
 
+Install Node 24, then run these commands in your own terminal:
+
+```sh
+git clone https://github.com/sarahaiwork2026/safelens.git
+cd safelens
+npm run setup
+npm run dev
+```
+
+Open **http://localhost:5173** on that same computer. `npm run setup` installs the pinned pnpm workspace dependencies. `npm run dev` creates the local configuration when missing, applies local database migrations, and starts the frontend and API together. Existing configuration and data are preserved. No Cloudflare account or AI key is required to try the app. Do not use `npm install`, because this repository uses pnpm workspace dependencies.
+
+For an existing checkout, run `git pull origin main`, then `npm run setup` and `npm run dev`.
+
+The equivalent pnpm workflow is:
+
 1. Use Node 24 (Node 22 or newer) and pnpm 11.25.0.
 2. Open the existing checkout. If needed, clone `https://github.com/sarahaiwork2026/safelens.git` and enter `safelens`.
 3. Run `pnpm install --frozen-lockfile`.
-4. Create `apps/web/.dev.vars` from `.dev.vars.example` if it does not already exist. Keep `ENVIRONMENT=development` and `EXTRACTOR_CHAIN=rules` for local tests. Preserve existing secrets.
+4. Create `apps/web/.dev.vars` from `apps/web/.dev.vars.example` if it does not already exist. Keep `ENVIRONMENT=development` and `EXTRACTOR_CHAIN=rules` for local tests. Preserve existing secrets.
 5. Run `pnpm db:migrate`.
 6. Run `pnpm dev` and open the address printed by Vite.
 7. Submit a report or open Test Lab and run the 25 simulated reports. No API key is required.
