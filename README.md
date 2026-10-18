@@ -141,3 +141,5 @@ The local Worker cannot resolve api.groq.com in this managed environment, so its
 A temporary Cloudflare Tunnel was attempted for review without deployment. The tunnel endpoint returned HTTP 403, and cloudflared also encountered the managed DNS restriction. No working public preview URL was obtained. The app runs locally on port 4173; this environment does not expose that loopback address as a user-facing preview.
 
 Review artifacts: [recorded working demo](docs/preview/safelens-demo.webm), [structured report](docs/preview/report-result.png), [Test Lab 25/25](docs/preview/test-lab.png). Live browser map rendering currently uses the failure fallback under this environment's network restrictions; marker/filter interactions pass against a fixture map style.
+
+Map diagnostic: Chromium rejected the environment HTTPS proxy certificate for tiles.openfreemap.org with ERR_CERT_AUTHORITY_INVALID. The style endpoint returns HTTP 200 through the shell trust store. Browser certificate verification was kept enabled; this is an environment trust issue, and a normal-browser live map check remains pending.
