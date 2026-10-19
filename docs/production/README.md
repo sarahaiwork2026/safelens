@@ -4,6 +4,12 @@ Checked on 19 October 2026 in Asia/Karachi.
 
 Live URL: https://safelens.sarah-aiwork2026.workers.dev
 
+## Admin authentication and safety chat
+
+Commit 2714e8e deployed through connected Cloudflare Builds. Live browser checks passed for admin login, dashboard authorization, secure cookies, logout revocation and preserved incident data. The official-reference form is available on the original real incident. No official source was fabricated for production. A live chat request returned HTTP 200, engine groq, English, Clifton and its matching database incident. The new routes are `/login` and `/chat`.
+
+Local checks cover 81 unit/Worker tests, all four new browser flows, source attachment/removal, multilingual responses, quota fallback, map markers and mobile accessibility. Public entry-page Lighthouse scores are 100/100/100/99 for landing/report/login/chat, with 100 accessibility and best practices, and LCP below one second. Final browser review is recorded in auth-chat-check.json when complete.
+
 ## Theme and demo release
 
 The connected GitHub build deployed commit 79df1bc on 19 October. Production D1 now contains five labeled demo incidents with eleven fixture reports, plus the original public incident, which was preserved. The examples cover Clifton, Lyari, North Nazimabad, Korangi and DHA, all four input languages and High, Moderate and Low severities. They remain unresolved and have real detail pages, timelines and selected map markers. The alert center includes active incidents on initial load.

@@ -74,6 +74,7 @@ test('entry pages render useful HTML before JavaScript and keep the form inert u
     ['/', 'Scattered reports, one clear incident story'],
     ['/report', 'Report an incident'],
     ['/login', 'Admin sign in'],
+    ['/chat', 'Ask SafeLens'],
   ] as const) {
     await page.goto(path ?? '/');
     await expect(
@@ -81,6 +82,12 @@ test('entry pages render useful HTML before JavaScript and keep the form inert u
     ).toBeVisible();
     if (path === '/report')
       await expect(page.getByLabel('What happened')).toBeDisabled();
+    if (path === '/login') {
+      await expect(page.getByLabel('Email', { exact: true })).toBeDisabled();
+      await expect(page.getByLabel('Password', { exact: true })).toBeDisabled();
+    }
+    if (path === '/chat')
+      await expect(page.getByLabel('Your question')).toBeDisabled();
   }
   await context.close();
 });

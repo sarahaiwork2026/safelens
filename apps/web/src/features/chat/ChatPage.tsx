@@ -7,7 +7,9 @@ import { Button, Field } from '../../components/ui';
 import { Select } from '../../components/ui/Select';
 import { copy } from '../../copy';
 import ChatAnswer from './ChatAnswer';
+import { useHydrated } from '../../lib/useHydrated';
 export default function ChatPage() {
+  const hydrated = useHydrated();
   const [message, setMessage] = useState(''),
     [language, setLanguage] = useState('auto');
   const [entries, setEntries] = useState<
@@ -39,7 +41,7 @@ export default function ChatPage() {
   return (
     <div className="container page chat-page">
       <div className="page-title">
-        <h1>{copy.chat.title}</h1>
+        <h1 id="chat-title">{copy.chat.title}</h1>
         <Button
           variant="secondary"
           disabled={mutation.isPending || !entries.length}
@@ -62,6 +64,7 @@ export default function ChatPage() {
               <Button
                 key={text}
                 variant="secondary"
+                disabled={!hydrated}
                 onClick={() => {
                   setMessage(text);
                   document.getElementById('chat-question')?.focus();
@@ -97,50 +100,59 @@ export default function ChatPage() {
           submit();
         }}
       >
-        <Field
-          id="chat-question"
-          label={copy.chat.message}
-          {...(validation ? { error: validation } : {})}
+        <fieldset
+          className="report-fields"
+          disabled={!hydrated}
+          aria-busy={!hydrated}
+          aria-labelledby="chat-title"
         >
-          <textarea
+          <Field
             id="chat-question"
-            dir="auto"
-            required
-            minLength={2}
-            maxLength={600}
-            rows={3}
-            placeholder={copy.chat.placeholder}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-                e.preventDefault();
-                if (!mutation.isPending) submit();
-              }
-            }}
-          />
-        </Field>
-        <div className="chat-compose-actions">
-          <Select
-            id="chat-language"
-            label={copy.chat.language}
-            value={language}
-            onChange={setLanguage}
-            options={['auto', 'English', 'Urdu', 'Roman Urdu'].map((value) => ({
-              value,
-              label: value === 'auto' ? copy.chat.auto : value,
-            }))}
-          />
-          <Button type="submit" busy={mutation.isPending}>
-            <Send size={16} />
-            {mutation.isPending ? copy.chat.sending : copy.chat.send}
-          </Button>
-        </div>
-        {mutation.isError && (
-          <p className="field-error" role="alert">
-            {mutation.error.message}
-          </p>
-        )}
+            label={copy.chat.message}
+            {...(validation ? { error: validation } : {})}
+          >
+            <textarea
+              id="chat-question"
+              dir="auto"
+              required
+              minLength={2}
+              maxLength={600}
+              rows={3}
+              placeholder={copy.chat.placeholder}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                  e.preventDefault();
+                  if (!mutation.isPending) submit();
+                }
+              }}
+            />
+          </Field>
+          <div className="chat-compose-actions">
+            <Select
+              id="chat-language"
+              label={copy.chat.language}
+              value={language}
+              onChange={setLanguage}
+              options={['auto', 'English', 'Urdu', 'Roman Urdu'].map(
+                (value) => ({
+                  value,
+                  label: value === 'auto' ? copy.chat.auto : value,
+                }),
+              )}
+            />
+            <Button type="submit" busy={mutation.isPending}>
+              <Send size={16} />
+              {mutation.isPending ? copy.chat.sending : copy.chat.send}
+            </Button>
+          </div>
+          {mutation.isError && (
+            <p className="field-error" role="alert">
+              {mutation.error.message}
+            </p>
+          )}
+        </fieldset>
       </form>
       <p className="meta">{copy.chat.privacy}</p>
       <p className="meta">{copy.chat.limits}</p>
