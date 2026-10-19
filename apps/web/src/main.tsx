@@ -6,7 +6,9 @@ import { createApplicationRouter } from './router';
 import { queryClient } from './lib/query';
 import { ErrorBoundary } from './app/ErrorBoundary';
 import { copy } from './copy';
+import { initializeTheme } from './lib/theme';
 import './styles/base.css';
+initializeTheme();
 const root = document.getElementById('root');
 async function start() {
   if (!root) return;

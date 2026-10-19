@@ -4,6 +4,7 @@ import type { Env } from '../env';
 declare module 'vitest' {
   export interface ProvidedContext {
     migration: string;
+    seed: string;
   }
 }
 export const bindings: Env = {

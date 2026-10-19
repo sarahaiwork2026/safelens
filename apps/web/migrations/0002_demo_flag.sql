@@ -1,0 +1,1 @@
+ALTER TABLE incidents ADD COLUMN is_demo INTEGER NOT NULL DEFAULT 0 CHECK (is_demo IN (0,1));

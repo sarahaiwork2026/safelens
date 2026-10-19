@@ -4,6 +4,10 @@ for (const scheme of ['light', 'dark'] as const)
   for (const width of [320, 1440])
     test(`accessible shell ${scheme} ${width}`, async ({ page }) => {
       await page.emulateMedia({ colorScheme: scheme, reducedMotion: 'reduce' });
+      await page.addInitScript(
+        (theme) => localStorage.setItem('safelens-theme', theme),
+        scheme,
+      );
       await page.setViewportSize({ width, height: 900 });
       for (const path of [
         '/report',

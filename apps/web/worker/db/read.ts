@@ -59,7 +59,9 @@ export async function list(
     .bind('live')
     .all<IncidentRow>();
   const active = rows.filter(
-    (r) => r.status !== 'resolved' && r.last_seen >= now - 86400000,
+    (r) =>
+      r.status !== 'resolved' &&
+      (r.is_demo === 1 || r.last_seen >= now - 86400000),
   );
   const filtered =
     status === 'all'

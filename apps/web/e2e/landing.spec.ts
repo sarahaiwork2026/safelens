@@ -42,6 +42,10 @@ test('landing screenshots and accessibility match responsive light and dark layo
       await page.emulateMedia({ colorScheme: scheme, reducedMotion: 'reduce' });
       await page.setViewportSize({ width, height: 1000 });
       await page.goto('/');
+      if ((await page.locator('html').getAttribute('data-theme')) !== scheme)
+        await page
+          .getByRole('button', { name: `Switch to ${scheme} theme` })
+          .click();
       await page.waitForLoadState('networkidle');
       await page.screenshot({
         path: testInfo.outputPath(`landing-${scheme}-${width}.png`),

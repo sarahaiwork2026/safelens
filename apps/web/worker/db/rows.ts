@@ -17,6 +17,7 @@ import type {
   TimelineEvent,
 } from 'core';
 export interface IncidentRow {
+  is_demo: number;
   id: string;
   ref: number;
   dataset: string;
@@ -85,6 +86,7 @@ export function claimCounts(json: string) {
 }
 export function incidentView(r: IncidentRow): IncidentSummary {
   return {
+    ...(r.is_demo ? { simulated: true } : {}),
     id: r.id,
     ref: r.ref,
     code: `INC-${String(r.ref).padStart(4, '0')}`,

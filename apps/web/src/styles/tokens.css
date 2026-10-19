@@ -34,37 +34,35 @@
   --shadow-pop: 0 1px 2px rgb(0 0 0 / 0.06), 0 8px 24px -8px rgb(0 0 0 / 0.18);
   --shadow-seg: 0 1px 2px rgb(0 0 0 / 0.08);
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-    --bg: #0e0e10;
-    --cream: #18181b;
-    --cream-2: #222226;
-    --surface: #141416;
-    --ink: #f2f2f3;
-    --ink-2: #ffffff;
-    --muted: #a0a0a8;
-    --subtle: #6b6b73;
-    --line: rgba(255, 255, 255, 0.08);
-    --line-strong: rgba(255, 255, 255, 0.14);
-    --focus: #7b9bff;
-    --overlay: rgba(0, 0, 0, 0.6);
-    --high: #f04438;
-    --high-tint: rgba(240, 68, 56, 0.1);
-    --high-tint-2: rgba(240, 68, 56, 0.18);
-    --high-text: #fda29b;
-    --high-line: rgba(240, 68, 56, 0.45);
-    --mod: #f79009;
-    --mod-tint: rgba(247, 144, 9, 0.1);
-    --mod-tint-2: rgba(247, 144, 9, 0.18);
-    --mod-text: #fec84b;
-    --mod-line: rgba(247, 144, 9, 0.45);
-    --low: #17b26a;
-    --low-tint: rgba(23, 178, 106, 0.1);
-    --low-tint-2: rgba(23, 178, 106, 0.18);
-    --low-text: #75e0a7;
-    --low-line: rgba(23, 178, 106, 0.45);
-  }
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0e0e10;
+  --cream: #18181b;
+  --cream-2: #222226;
+  --surface: #141416;
+  --ink: #f2f2f3;
+  --ink-2: #ffffff;
+  --muted: #a0a0a8;
+  --subtle: #6b6b73;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.14);
+  --focus: #7b9bff;
+  --overlay: rgba(0, 0, 0, 0.6);
+  --high: #f04438;
+  --high-tint: rgba(240, 68, 56, 0.1);
+  --high-tint-2: rgba(240, 68, 56, 0.18);
+  --high-text: #fda29b;
+  --high-line: rgba(240, 68, 56, 0.45);
+  --mod: #f79009;
+  --mod-tint: rgba(247, 144, 9, 0.1);
+  --mod-tint-2: rgba(247, 144, 9, 0.18);
+  --mod-text: #fec84b;
+  --mod-line: rgba(247, 144, 9, 0.45);
+  --low: #17b26a;
+  --low-tint: rgba(23, 178, 106, 0.1);
+  --low-tint-2: rgba(23, 178, 106, 0.18);
+  --low-text: #75e0a7;
+  --low-line: rgba(23, 178, 106, 0.45);
 }
 
 @theme inline {

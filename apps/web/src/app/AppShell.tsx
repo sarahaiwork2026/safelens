@@ -5,6 +5,7 @@ import { FilePlus2, List, Map, FlaskConical } from 'lucide-react';
 import { CONTACTS } from 'core';
 import { copy } from '../copy';
 import { ActionLink } from '../components/ui';
+import { ThemeToggle } from '../components/ui/ThemeToggle';
 const AlertHost = lazy(() => import('../components/alerts/AlertHost'));
 let ReadyAlertHost: ComponentType | undefined;
 export async function prepareShell() {
@@ -66,6 +67,7 @@ export function AppShell() {
             ))}
           </nav>
           <div className="header-actions">
+            <ThemeToggle />
             {location.pathname !== '/' &&
               (ReadyAlertHost ? (
                 <ReadyAlertHost />

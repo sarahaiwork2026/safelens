@@ -9,6 +9,7 @@ import { copy } from '../../copy';
 import { severityClass } from '../../components/severity';
 import { ActionLink, EmptyState } from '../../components/ui';
 import { useMedia } from '../../lib/useMedia';
+import { useTheme } from '../../lib/theme';
 maplibregl.setWorkerUrl(workerUrl);
 interface Props {
   incidents: IncidentSummary[];
@@ -28,7 +29,7 @@ export default function MapCanvas({
     map = useRef<MapInstance | null>(null),
     markers = useRef(new Map<number, Marker>()),
     firstSelection = useRef(true);
-  const dark = useMedia('(prefers-color-scheme: dark)'),
+  const dark = useTheme() === 'dark',
     reduced = useMedia('(prefers-reduced-motion: reduce)');
   const [loadedTheme, setLoadedTheme] = useState<boolean | null>(null),
     [failedTheme, setFailedTheme] = useState<boolean | null>(null);
@@ -119,7 +120,7 @@ export default function MapCanvas({
         incident.reportCount >= 6 ? String(incident.reportCount) : '';
       button.setAttribute(
         'aria-label',
-        `${copy.severity[incident.severity]} · ${copy.incident.title(copy.type[incident.type], incident.areaName)} · ${copy.incident.reports(incident.reportCount)}`,
+        `${incident.simulated ? `${copy.demo.badge} · ` : ''}${copy.severity[incident.severity]} · ${copy.incident.title(copy.type[incident.type], incident.areaName)} · ${copy.incident.reports(incident.reportCount)}`,
       );
       button.setAttribute('aria-pressed', String(selected === incident.ref));
       button.title = `${copy.incident.title(copy.type[incident.type], incident.areaName)} · ${copy.incident.reports(incident.reportCount)}`;

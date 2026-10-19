@@ -144,7 +144,11 @@ export default function IncidentPage() {
         <SeverityPill level={i.severity} />
         <StatusPill status={i.status} />
         <UnverifiedPill />
+        {i.simulated && (
+          <span className="pill demo-pill">{copy.demo.badge}</span>
+        )}
       </div>
+      {i.simulated && <p className="demo-notice">{copy.demo.notice}</p>}
       {escalation?.fromType &&
         escalation.toType &&
         escalation.fromSeverity &&

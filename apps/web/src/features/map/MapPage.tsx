@@ -61,6 +61,9 @@ export default function MapPage() {
         <>
           <aside className="map-list">
             <h2>{copy.map.inView}</h2>
+            {incidents.some((i) => i.simulated) && (
+              <p className="meta">{copy.demo.notice}</p>
+            )}
             {visible.length ? (
               visible.map((i) => (
                 <button
@@ -73,6 +76,7 @@ export default function MapPage() {
                     {copy.incident.title(copy.type[i.type], i.areaName)}
                   </strong>
                   <small>
+                    {i.simulated && <>{copy.demo.badge} · </>}
                     {copy.incident.reports(i.reportCount)} ·{' '}
                     {relative(i.updatedAt, now)}
                   </small>
@@ -143,6 +147,9 @@ export default function MapPage() {
                   )}
                 </h2>
                 <p>{current.summary}</p>
+                {current.simulated && (
+                  <p className="meta">{copy.demo.incident}</p>
+                )}
                 <p className="meta">
                   {copy.incident.reports(current.reportCount)} ·{' '}
                   {copy.map.radius}

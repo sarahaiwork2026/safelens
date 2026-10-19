@@ -6,6 +6,8 @@ SafeLens turns community reports in English, Urdu, Roman Urdu and mixed language
 
 Open **https://safelens.sarah-aiwork2026.workers.dev**. The frontend, Worker API, D1 database, real map tiles, Turnstile and Groq runtime secret are deployed. Rules fallback remains available when the AI provider cannot respond.
 
+New visitors start in light mode, including on devices set to dark mode. The header theme button switches both the interface and map and remembers an explicit choice. View Incidents includes five labeled demo threads in Clifton, Lyari, North Nazimabad, Korangi and DHA, with eleven existing fixture reports across all four input languages. Their maps, timelines, evidence and status controls use D1 data. The alert center includes active incidents immediately. Demo incidents remain visible until resolved, keep their actual timestamps and cannot absorb new public reports.
+
 Production checks: the browser Rules Test Lab passed 25/25 and all seven coverage checks. The full 51-case provider-chain evaluation matched the required output checks; 22 cases used Groq, including all four input languages. The stricter all-AI gate did not pass because the remaining eligible cases used fallback. Automated report submission was blocked by this environment's access to Turnstile's challenge subdomain, so no claim of automated end-to-end Turnstile completion is made. See [production checks](docs/production/README.md).
 
 ## Local setup
@@ -99,6 +101,8 @@ The base fixture contract stores 23 reports, holds 2 for missing location, forms
 Public app: **https://safelens.sarah-aiwork2026.workers.dev**.
 
 For the connected Cloudflare GitHub build, use root directory `/`, build command `pnpm build`, and deploy command `pnpm --filter web deploy`. The deploy command selects the app in this workspace. Running `npx wrangler deploy` at the repository root does not select an application.
+
+Deployment applies pending D1 migrations before publishing the Worker. The additive demo migration runs once, preserves existing reports and does not reset demo status on later deployments. `scripts/build-demo-seed.ts` generates the migration from the shared parser and existing fixtures. Local migrations include the same examples; the browser test reset intentionally removes all local incidents for isolated tests.
 
 The production D1 binding and public Turnstile site key are committed. Signing, IP hashing and Turnstile secrets are stored only in Cloudflare. If `GROQ_API_KEY` is configured as a secret build variable, the deploy script securely installs it as a runtime Worker secret through standard input after deployment. It never writes the key to a file or client asset. With no native Groq build key, existing runtime secrets are preserved.
 

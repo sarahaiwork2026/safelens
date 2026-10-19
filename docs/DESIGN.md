@@ -4,6 +4,8 @@ The interface is inspired by incident.io: calm, editorial, lots of white space, 
 
 One deliberate difference: incident.io's brand color is orange-red (`#F25533`). In SafeLens red means danger, so the brand is ink and cream, and red, amber and green are reserved for severity.
 
+19 October 2026 update: light is the initial theme regardless of the device preference. A keyboard-accessible sun/moon button stays visible in the header on desktop and mobile. An explicit choice is remembered and controls map styling too. Publicly visible fixture incidents show a neutral Demo badge and a simulated-data notice in the list, detail and map views; alert entries also identify them as demos.
+
 ## 1. Reference screenshots
 
 Captured from incident.io on 2026-10-18 at 1440 px wide, in `docs/design/reference/`. Open them before building any screen. Where a screenshot and this file disagree on feel, follow the screenshot. Where they disagree on a SafeLens rule (color, copy, scope), follow this file.

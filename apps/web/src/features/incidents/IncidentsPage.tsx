@@ -70,6 +70,9 @@ export default function IncidentsPage() {
       ) : (
         data && (
           <>
+            {data.incidents.some((i) => i.simulated) && (
+              <p className="demo-notice">{copy.demo.notice}</p>
+            )}
             <div className="stat-grid">
               {[
                 {
@@ -202,6 +205,11 @@ export default function IncidentsPage() {
                         <td>
                           <div className="incident-title">
                             <span className="meta numbers">{i.code}</span>
+                            {i.simulated && (
+                              <span className="pill demo-pill">
+                                {copy.demo.badge}
+                              </span>
+                            )}
                             <Link
                               to={`/incidents/${i.ref}`}
                               className="incident-link"

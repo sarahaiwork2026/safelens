@@ -7,12 +7,15 @@ import { countClaims, labelsFromCounts, evidenceSummary } from './claims';
 import { GUIDANCE } from './guidance';
 import type { IncidentDetail, ReportView, TimelineEvent } from './api';
 export function buildDemoSnapshot(): IncidentDetail {
-  const now = Date.parse('2026-10-18T22:00:00+05:00'),
-    reports: ReportView[] = [],
+  return buildDemoThread('C01', Date.parse('2026-10-18T22:00:00+05:00'));
+}
+
+export function buildDemoThread(cluster: string, now: number): IncidentDetail {
+  const reports: ReportView[] = [],
     timeline: TimelineEvent[] = [];
   let current: IncidentDetail['incident'] | undefined;
   for (const fixture of fixtures.reports
-    .filter((r) => r.expected.cluster === 'C01')
+    .filter((r) => r.expected.cluster === cluster)
     .sort((a, b) => b.minutesAgo - a.minutesAgo)) {
     const result = analyzeReport(
       fixture.text,
@@ -46,7 +49,7 @@ export function buildDemoSnapshot(): IncidentDetail {
     });
     if (!current) {
       current = {
-        id: 'demo-C01',
+        id: `demo-${cluster}`,
         ref: 1,
         code: 'INC-0001',
         type: x.type,

@@ -6,6 +6,13 @@ import {
 } from 'core';
 export const copy = {
   brand: 'SafeLens',
+  theme: { light: 'Switch to light theme', dark: 'Switch to dark theme' },
+  demo: {
+    badge: 'Demo',
+    notice:
+      'Demo incidents use simulated reports, not current emergency information.',
+    incident: 'Simulated incident for demonstration.',
+  },
   skip: 'Skip to content',
   nav: {
     report: 'Report',

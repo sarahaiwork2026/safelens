@@ -9,7 +9,12 @@ export default defineConfig({
     }),
   ],
   test: {
-    provide: { migration: readFileSync('migrations/0001_init.sql', 'utf8') },
+    provide: {
+      migration: ['0001_init.sql', '0002_demo_flag.sql']
+        .map((file) => readFileSync(`migrations/${file}`, 'utf8'))
+        .join('\n'),
+      seed: readFileSync('migrations/0003_demo_incidents.sql', 'utf8'),
+    },
     include: ['worker/test/**/*.test.ts'],
   },
 });

@@ -62,7 +62,7 @@ export async function storeReport(
   const hash = await sha256(norm(result.stored));
   const duplicate = await db
     .prepare(
-      'SELECT * FROM reports WHERE dataset=? AND text_hash=? AND created_at>=? ORDER BY created_at DESC LIMIT 1',
+      'SELECT * FROM reports WHERE dataset=? AND text_hash=? AND created_at>=? AND incident_id IN (SELECT id FROM incidents WHERE is_demo=0) ORDER BY created_at DESC LIMIT 1',
     )
     .bind(dataset, hash, now - 60000)
     .first<ReportRow>();
@@ -83,7 +83,7 @@ export async function storeReport(
   }
   const { results: rows } = await db
     .prepare(
-      'SELECT * FROM incidents WHERE dataset=? AND family=? AND last_seen>=? AND first_seen<=?',
+      'SELECT * FROM incidents WHERE dataset=? AND family=? AND last_seen>=? AND first_seen<=? AND is_demo=0',
     )
     .bind(
       dataset,

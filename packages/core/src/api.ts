@@ -9,6 +9,7 @@ import type {
 } from './schema';
 import type { EvidenceLabel } from './claims';
 export interface IncidentSummary {
+  simulated?: boolean;
   id: string;
   ref: number;
   code: string;

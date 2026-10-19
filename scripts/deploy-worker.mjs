@@ -25,6 +25,7 @@ function run(args, input) {
   });
 }
 
+await run(['d1', 'migrations', 'apply', 'safelens', '--remote']);
 await run(['deploy']);
 
 // Workers Builds variables must be explicitly installed as runtime secrets.

@@ -1,5 +1,15 @@
 # SafeLens build plan
 
+## Follow-up release, 19 October 2026
+
+- [x] Keep the existing workers.dev hostname at the user's request.
+- [x] Default to light mode; add a persistent header switcher and synchronize map styling.
+- [x] Seed five D1 demo threads from existing fixtures, labeled separately from public reports.
+- [x] Include active incidents in the alert center immediately and preserve incoming-alert behavior.
+- [x] Validate repeatable seeding, existing-data preservation, expiry and public-report isolation in Worker tests.
+- [x] Pass all 30 browser tests, including the theme switcher, map styles and responsive accessibility.
+- [ ] Verify the release on the live Cloudflare domain.
+
 From an empty repository to a deployed, demo-ready product. Work through the phases in order. Each phase ends with a gate: every listed command passes and every exit check is true. Do not start the next phase with a failing gate.
 
 The order follows the proposal's methodology (section 10): database design and AI extraction, report form and storage, related-report matching and threads, claim labels and contradiction detection, map and dashboard, responder view and polish, testing and documentation. Logic comes first and is proven by tests. Interface comes after.

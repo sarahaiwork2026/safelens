@@ -24,6 +24,10 @@ test('every route has zero axe violations, browser errors or warnings in both sc
       '/does-not-exist',
     ]) {
       await page.goto(path);
+      if ((await page.locator('html').getAttribute('data-theme')) !== scheme)
+        await page
+          .getByRole('button', { name: `Switch to ${scheme} theme` })
+          .click();
       await expect(page.locator('h1')).toHaveCount(1);
       await page.waitForLoadState('networkidle');
       expect(

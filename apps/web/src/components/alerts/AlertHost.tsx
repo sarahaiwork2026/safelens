@@ -18,6 +18,7 @@ import { SeverityIcon, severityClass } from '../severity';
 import { relative } from '../../lib/format';
 import { RedAlertDialog } from './RedAlertDialog';
 import { useNow } from '../../lib/useNow';
+import { useTheme } from '../../lib/theme';
 export default function AlertHost() {
   const { data, dataUpdatedAt } = useQuery({
       ...incidentsQuery(),
@@ -27,6 +28,19 @@ export default function AlertHost() {
     baseline = useRef<Record<number, number> | null>(null),
     now = useNow();
   const state = useAlerts();
+  const theme = useTheme();
+  const activeAlerts =
+    data?.incidents.filter((i) => i.status !== 'resolved') ?? [];
+  const alerts = [
+    ...activeAlerts.map((incident) => ({
+      incident,
+      at: incident.updatedAt,
+      key: `active:${incident.ref}`,
+    })),
+    ...state.alerts.filter(
+      (a) => !activeAlerts.some((i) => i.ref === a.incident.ref),
+    ),
+  ];
   useEffect(() => {
     const dismiss = (event: KeyboardEvent) => {
       if (
@@ -112,10 +126,10 @@ export default function AlertHost() {
                 {state.sound ? <Volume2 size={18} /> : <VolumeX size={18} />}
               </Button>
             </div>
-            {!state.alerts.length ? (
+            {!alerts.length ? (
               <p className="meta">{copy.empty.alerts}</p>
             ) : (
-              state.alerts.map((a) => (
+              alerts.map((a) => (
                 <Popover.Close asChild key={`${a.key}:${a.at}`}>
                   <Link
                     to={`/incidents/${a.incident.ref}`}
@@ -130,6 +144,7 @@ export default function AlertHost() {
                         )}
                       </strong>
                       <small>
+                        {a.incident.simulated && <>{copy.demo.badge} · </>}
                         {relative(a.at, now)} · {copy.unverifiedPill}
                       </small>
                     </span>
@@ -141,7 +156,7 @@ export default function AlertHost() {
         </Popover.Portal>
       </Popover.Root>
       <RedAlertDialog />
-      <Toaster position="top-right" visibleToasts={3} />
+      <Toaster position="top-right" visibleToasts={3} theme={theme} />
     </>
   );
 }

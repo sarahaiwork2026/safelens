@@ -81,6 +81,7 @@ export function RedAlertDialog() {
             {i.summary}
           </AlertDialog.Description>
           <p className="meta">
+            {i.simulated && <>{copy.demo.incident} </>}
             {i.code} · {copy.incident.reports(i.reportCount)} ·{' '}
             {relative(i.updatedAt)}
           </p>

@@ -13,6 +13,7 @@ export function AlertToast({ incident }: { incident: IncidentSummary }) {
           {copy.incident.title(copy.type[incident.type], incident.areaName)}
         </strong>
         <p>
+          {incident.simulated && <>{copy.demo.badge} · </>}
           {copy.severity[incident.severity]} · {copy.unverifiedPill}
         </p>
       </div>
