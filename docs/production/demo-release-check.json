@@ -1,0 +1,65 @@
+{
+  "checkedAt": "2026-10-19T10:51:28.832Z",
+  "url": "https://safelens.sarah-aiwork2026.workers.dev/incidents",
+  "initialThemeOnDarkDevice": "light",
+  "themePersistence": "passed",
+  "activeAlerts": "present on initial load",
+  "existingIncidentPreserved": true,
+  "threads": [
+    {
+      "ref": 3,
+      "area": "Lyari",
+      "severity": 3,
+      "reports": 2,
+      "timelineEvents": 2,
+      "map": "selected marker visible"
+    },
+    {
+      "ref": 2,
+      "area": "Clifton",
+      "severity": 3,
+      "reports": 5,
+      "timelineEvents": 6,
+      "map": "selected marker visible"
+    },
+    {
+      "ref": 5,
+      "area": "Korangi",
+      "severity": 2,
+      "reports": 1,
+      "timelineEvents": 1,
+      "map": "selected marker visible"
+    },
+    {
+      "ref": 4,
+      "area": "North Nazimabad",
+      "severity": 2,
+      "reports": 2,
+      "timelineEvents": 2,
+      "map": "selected marker visible"
+    },
+    {
+      "ref": 6,
+      "area": "DHA",
+      "severity": 1,
+      "reports": 1,
+      "timelineEvents": 1,
+      "map": "selected marker visible"
+    }
+  ],
+  "responsiveWidths": [
+    320,
+    390,
+    1440
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "axeViolations": 0,
+  "browserErrors": [],
+  "mapStyles": [
+    "https://tiles.openfreemap.org/styles/positron",
+    "https://tiles.openfreemap.org/styles/dark"
+  ]
+}

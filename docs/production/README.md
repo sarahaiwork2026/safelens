@@ -4,6 +4,14 @@ Checked on 19 October 2026 in Asia/Karachi.
 
 Live URL: https://safelens.sarah-aiwork2026.workers.dev
 
+## Theme and demo release
+
+The connected GitHub build deployed commit 79df1bc on 19 October. Production D1 now contains five labeled demo incidents with eleven fixture reports, plus the original public incident, which was preserved. The examples cover Clifton, Lyari, North Nazimabad, Korangi and DHA, all four input languages and High, Moderate and Low severities. They remain unresolved and have real detail pages, timelines and selected map markers. The alert center includes active incidents on initial load.
+
+Local validation: typecheck, lint, 74 unit/Worker tests and all 30 browser tests passed. The initial bundle is 130.1 KB JavaScript and 18.2 KB CSS gzip. Production browser checks verified the light default on a dark device, keyboard switching, saved preference, real light/dark map styles, all five detail-to-map links, original Urdu text expansion, and responsive layouts at 320, 390 and 1440 pixels. See demo-release-check.json and the demo screenshots.
+
+## Earlier deployment checks
+
 - HTTP 200 for landing, incident dashboard, About and Map.
 - Health confirms D1, Groq, rules fallback and production Turnstile.
 - Browser Rules Test Lab: 25/25, all seven coverage checks.
