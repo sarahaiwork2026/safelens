@@ -6,7 +6,7 @@ SafeLens turns community reports in English, Urdu, Roman Urdu and mixed language
 
 Open **https://safelens.sarah-aiwork2026.workers.dev**. The frontend, Worker API, D1 database, real map tiles, Turnstile and Groq runtime secret are deployed. Rules fallback remains available when the AI provider cannot respond.
 
-New visitors start in light mode, including on devices set to dark mode. The header theme button switches both the interface and map and remembers an explicit choice. View Incidents includes five labeled demo threads in Clifton, Lyari, North Nazimabad, Korangi and DHA, with eleven existing fixture reports across all four input languages. Their maps, timelines, evidence and status controls use D1 data. The alert center includes active incidents immediately. Demo incidents remain visible until resolved, keep their actual timestamps and cannot absorb new public reports.
+New visitors start in light mode, including on devices set to dark mode. The header theme button switches both the interface and map and remembers an explicit choice. The admin-only View Incidents includes five labeled demo threads in Clifton, Lyari, North Nazimabad, Korangi and DHA, with eleven existing fixture reports across all four input languages. Their maps, timelines, evidence and status controls use D1 data. The alert center includes active incidents immediately. Demo incidents remain visible until resolved, keep their actual timestamps and cannot absorb new public reports.
 
 Production checks: the browser Rules Test Lab passed 25/25 and all seven coverage checks. The full 51-case provider-chain evaluation matched the required output checks; 22 cases used Groq, including all four input languages. The stricter all-AI gate did not pass because the remaining eligible cases used fallback. Automated report submission was blocked by this environment's access to Turnstile's challenge subdomain, so no claim of automated end-to-end Turnstile completion is made. See [production checks](docs/production/README.md).
 
@@ -23,6 +23,8 @@ npm run dev
 
 Open **http://localhost:5173** on that same computer. `npm run setup` installs the pinned pnpm workspace dependencies. `npm run dev` creates the local configuration when missing, applies local database migrations, and starts the frontend and API together. Existing configuration and data are preserved. No Cloudflare account or AI key is required to try the app. Do not use `npm install`, because this repository uses pnpm workspace dependencies.
 
+Local admin sign-in uses `admin@safelens.test` and `Local-only-test-password-2026` from `.dev.vars.example`. These are local test credentials only; production uses a separate secret hash. Open `/chat` for public safety guidance or `/login` for the dashboard.
+
 For an existing checkout, run `git pull origin main`, then `npm run setup` and `npm run dev`.
 
 The equivalent pnpm workflow is:
@@ -33,7 +35,7 @@ The equivalent pnpm workflow is:
 4. Create `apps/web/.dev.vars` from `apps/web/.dev.vars.example` if it does not already exist. Keep `ENVIRONMENT=development` and `EXTRACTOR_CHAIN=rules` for local tests. Preserve existing secrets.
 5. Run `pnpm db:migrate`.
 6. Run `pnpm dev` and open the address printed by Vite.
-7. Submit a report or open Test Lab and run the 25 simulated reports. No API key is required.
+7. Submit a report, try safety chat, or sign in and open Test Lab and run the 25 simulated reports. No API key is required.
 
 The standard demo is in [TEST-DATA.md](docs/specs/TEST-DATA.md#7-demo-script-minimum-demonstration). Phased implementation and validated checkpoints are in [PROGRESS.md](docs/PROGRESS.md) and [PLAN.md](docs/PLAN.md).
 
@@ -70,6 +72,9 @@ Keep secrets in the ignored `apps/web/.dev.vars` for local development, and Clou
 
 | Name | Purpose |
 | --- | --- |
+| `ADMIN_EMAIL` | The single administrator email, configured in Wrangler vars |
+| `ADMIN_PASSWORD_HASH` | Salted PBKDF2-SHA256 hash in a Worker secret, never the plaintext password |
+| `SAFELENS_ADMIN_EMAIL`, `SAFELENS_ADMIN_PASSWORD` | Private local environment inputs for the authenticated evaluation CLI |
 | `GROQ_API_KEY` | Optional local AI, required for the live Groq demonstration |
 | `GEMINI_API_KEY` | Optional secondary provider |
 | `DRAFT_SECRET` | Production signing key, at least 32 random bytes |
@@ -88,11 +93,23 @@ Development without a signing secret uses an ephemeral key initialized during a 
 
 Known areas resolve locally. Unknown landmarks ask for an area when no identifying Nominatim contact is configured. `scripts/verify-gazetteer.ts` checks unlocked coordinates with that contact and respects the service rate limit. Do not change locked fixture coordinates.
 
+## Admin authentication and safety chat
+
+`/login` accepts the one configured administrator; there is no public signup. Password checks use Web Crypto PBKDF2-SHA256 with a random 24-byte salt and 100,000 iterations, the Workers Web Crypto limit. Only the encoded hash is configured in Cloudflare. To rotate it, generate a new value with `hashPassword` in `worker/services/auth.ts` and install `ADMIN_PASSWORD_HASH` using Wrangler's private input. Never commit the production password or hash.
+
+Sessions last eight hours, use random opaque cookies with HttpOnly, Secure and SameSite=Strict in production, and store only token hashes in D1. Logout revokes the session. Changing the email or password hash invalidates existing sessions. Login allows five attempts per connection per 15 minutes and thirty globally. Origin checks apply to every mutation.
+
+`/chat` is public. Groq interprets the question into a validated intent and known areas; the server retrieves recent incident summaries and renders reviewed English, Urdu or Roman Urdu guidance. The response does not expose original report text or model-invented claims, telephone numbers or links. Community evidence remains unverified, even with an official reference. Demo records are labeled as simulated. Community updates cover seven days, with up to eight matching results; route checks use a two-kilometre straight corridor, not navigation or a live traffic feed. Absence of reports never establishes safety.
+
+Chat allows three requests per minute and twenty per hour per connection. Model calls are separately capped at two per minute and 200 per day globally, within the existing shared Groq daily budget. A timeout, exhausted quota or provider failure uses database results and local guidance. No chat transcript is stored by SafeLens; the current browser conversation is memory only. Redacted questions are sent to Groq in AI mode.
+
+On a real incident's detail page, the admin can attach up to five official references: HTTPS URL, title, summary and publication time in Karachi. Supported official domains are gov.pk, gos.pk, edhi.org and chhipa.org. The admin explicitly reviews relevance, and the app records review time. Citations appear in chat alongside the community report. Sources can be removed. There is no automatic official feed or automatic claim verification, and references cannot be attached to simulated demos.
+
 ## Test Lab and evidence
 
 Test Lab sends each of the 25 reports to its own `test:<runId>` dataset. Live incidents remain separate. It compares actual report fields and final threads, displays differences and computes seven coverage checks from actual results. A run can be resumed in the same browser session; reset deletes only that run. Runs older than an hour are cleaned up when another run starts.
 
-Supported means at least two reports repeat a claim. Contradictory means reports contain opposing claims. Unconfirmed means one report mentions a claim. These labels never establish that a report is true. Status controls are intentionally public, origin checked, rate limited and recorded in the timeline.
+Supported means at least two reports repeat a claim. Contradictory means reports contain opposing claims. Unconfirmed means one report mentions a claim. These labels never establish that a report is true. Incident lists, details, status controls, maps, alerts and Test Lab require an authenticated administrator. Their APIs enforce the same authorization. Status changes remain origin checked, rate limited and recorded in the timeline.
 
 The base fixture contract stores 23 reports, holds 2 for missing location, forms 12 threads and records 3 escalation events. The additional 26 cases cover Urdu negation, time across midnight, prompt injection, redaction, incomplete input and location masking. The landing is a generated static snapshot, never a live incident or a fabricated metric.
 
@@ -112,7 +129,7 @@ Local development is complete independently of production accounts. Deployment a
 2. Create D1 using `pnpm --filter web exec wrangler d1 create safelens`. Replace the local-only database ID in `apps/web/wrangler.jsonc` with the returned ID.
 3. Apply `pnpm db:migrate:remote`.
 4. Create a managed Turnstile widget for the real hostname and set its public key as `VITE_TURNSTILE_SITE_KEY` before building.
-5. Set `GROQ_API_KEY`, `DRAFT_SECRET`, `IP_HASH_SALT` and `TURNSTILE_SECRET_KEY` with `pnpm --filter web exec wrangler secret put <NAME>`. Gemini is optional. Generate signing and salt values securely; never paste them into chat.
+5. Set `GROQ_API_KEY`, `ADMIN_PASSWORD_HASH`, `DRAFT_SECRET`, `IP_HASH_SALT` and `TURNSTILE_SECRET_KEY` with `pnpm --filter web exec wrangler secret put <NAME>`. Gemini is optional. Generate signing and salt values securely; never paste them into chat.
 6. Add the identifying contact to `NOMINATIM_USER_AGENT` in Wrangler vars, verify unlocked gazetteer coordinates and recheck emergency contacts and free limits.
 7. Run `pnpm deploy`, then the live smoke tests and demo from the plan, with Groq and again with the key removed.
 
@@ -143,11 +160,13 @@ Production dependency audit found zero vulnerabilities. The approved Cloudflare 
 
 ## Rendering and performance
 
-The production build renders the landing, report and incident-list entry HTML from the same React routes used by the SPA. Hydration then enables controls and loads live data. No build-time incident counts are injected. The report form stays disabled until its event handlers are ready. Initial CSS is included in the HTML, and hashed external assets remain cacheable; the bundle check counts both CSS deliveries. Map rendering stays lazy.
+The production build renders the landing, report, sign-in and chat entry HTML from the same React routes used by the SPA. Hydration then enables controls and loads live data. No build-time incident counts are injected. The report form stays disabled until its event handlers are ready. Initial CSS is included in the HTML, and hashed external assets remain cacheable; the bundle check counts both CSS deliveries. Map rendering stays lazy.
 
 Lighthouse uses a 390 px mobile viewport, simulated Fast 4G at 9 Mbps and 60 ms RTT, and 4x CPU slowdown. Those network parameters follow Chromium's [Fast4GConditions](https://github.com/ChromeDevTools/devtools-frontend/blob/main/front_end/core/sdk/NetworkManager.ts), matching the architecture's Fast 4G target. Lighthouse's default 1.6 Mbps, 150 ms profile is Slow 4G; the earlier stress run on that profile had 2.48 to 2.73 second LCP. Assertions remain performance 90+, accessibility 100, best practices 100 and LCP below 2 seconds.
 
 ## Local validation and preview
+
+Admin/chat extension: 81 unit/Worker tests passed. The full browser run passed 32/33, then the corrected accessibility case and all four new-flow tests passed. Login/logout, protected APIs, source attachment/removal, public citations, chat maps and multilingual rate limits are covered. Public landing/report/login/chat all pass the Fast 4G performance assertions; see [auth/chat performance results](docs/auth-chat-performance.json). The measurements below describe the earlier release.
 
 Final local run: 47 core/frontend tests, 25 Worker tests and 28 browser tests passed. Typecheck, lint, the production build and dependency audit passed. The minimum demonstration works through reporting, multilingual grouping, escalation, responder review, map selection, signed follow-up and the complete Test Lab.
 

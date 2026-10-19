@@ -6,3 +6,7 @@ DRAFT_SECRET=
 IP_HASH_SALT=
 TURNSTILE_SECRET_KEY=
 NOMINATIM_USER_AGENT=
+
+# Local-only admin credentials. Production uses its own Cloudflare secret.
+ADMIN_EMAIL=admin@safelens.test
+ADMIN_PASSWORD_HASH="pbkdf2-sha256$100000$_jia91n916w30GbNtpfXSmTa0zNqs_pU$Z8L4iTWUz4gMnowS6_p_c_5ShiklTmjH9DztA6sDrQg"

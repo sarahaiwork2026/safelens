@@ -205,3 +205,15 @@ Steps for the human and the agent together (the agent prepares commands, the hum
 10. Re-check the emergency contacts against the source page and the free tier limits on the day before the demo.
 
 Gate: the demo script runs on the production URL with a Groq key, and again with the key removed (rules fallback).
+
+## Phase 12: Admin access and grounded chat, authorized 19 October 2026
+
+- [x] One admin account using a private password hash and revocable D1 sessions.
+- [x] Enforce authorization on dashboard HTML, incident APIs and Test Lab APIs.
+- [x] Public multilingual chat with validated Groq intent, bounded incident retrieval, safety guidance and local fallback.
+- [x] Persistent request/model quotas and provider cooldown.
+- [x] Admin-managed official references with timestamps, domain validation and explicit review.
+- [x] Login, chat, citations and maps integrated into the light/dark responsive UI.
+- [x] Worker tests for auth, expiry, rotation, throttling, chat grounding, sources and fallback.
+- [x] Finish browser/accessibility and production-build performance checks.
+- [ ] Configure production hash, push to GitHub, deploy and verify live sign-in/chat.

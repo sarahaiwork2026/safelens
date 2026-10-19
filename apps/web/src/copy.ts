@@ -6,6 +6,80 @@ import {
 } from 'core';
 export const copy = {
   brand: 'SafeLens',
+  auth: {
+    title: 'Admin sign in',
+    email: 'Email',
+    password: 'Password',
+    signIn: 'Sign in',
+    signOut: 'Sign out',
+    admin: 'Admin',
+    onlyAdmin:
+      'Incident dashboards are available to the administrator. Reporting and safety chat are open to everyone.',
+  },
+  chat: {
+    response: 'SafeLens reply',
+    title: 'Ask SafeLens',
+    message: 'Your question',
+    placeholder: 'Ask about an area, route or situation',
+    send: 'Send',
+    sending: 'Checking reports',
+    clear: 'Clear chat',
+    you: 'You',
+    language: 'Reply language',
+    auto: 'Auto',
+    examples: [
+      'Any reported incidents in Clifton?',
+      'Korangi se Saddar ka rasta kaisa hai?',
+      'کلفٹن میں کوئی خطرہ رپورٹ ہوا ہے؟',
+      'I smell gas. What should I do?',
+    ],
+    welcome: 'Ask about Karachi reports, travel concerns or safety guidance.',
+    privacy:
+      'Questions are not stored. Keep names and personal details out of chat.',
+    limits:
+      'Up to 3 messages per minute and 20 per hour. Local guidance stays available when the AI quota is full.',
+    coverage:
+      'Recent community updates cover the last 7 days. Demo incidents are shown separately. No report does not mean an area is safe.',
+    route:
+      'Route matches use an approximate corridor between the named areas, not a road route or live traffic feed.',
+    community: 'Community report, unverified',
+    demo: 'Simulated demo, not a current incident',
+    official: 'Official source, reviewed by admin',
+    noOfficial: 'No official source attached.',
+    retrieved: 'Checked',
+    updated: 'Latest update',
+    published: 'Published',
+    reviewed: 'Reviewed',
+    contacts: 'Official emergency contacts',
+    source: 'Source',
+    sourceChecked: 'Contact source checked',
+    map: 'Show matching areas on map',
+    mapTitle: 'Reported areas',
+    ai: 'Groq assisted',
+    local: 'Local guidance',
+    quota:
+      'AI quota or provider unavailable. Showing database results and local guidance.',
+    tooShort: 'Add a question with at least two characters.',
+    safety:
+      'SafeLens cannot certify that an area or route is safe. Reports may be incomplete or out of date.',
+  },
+  sources: {
+    title: 'Official references',
+    add: 'Attach source',
+    name: 'Source title',
+    url: 'Official page URL',
+    summary: 'What this source says',
+    date: 'Publication date and time (Karachi)',
+    reviewed:
+      'I reviewed this official page and its relevance to this incident.',
+    remove: 'Remove source',
+    saved: 'Source attached',
+    empty: 'No official source attached.',
+    policy:
+      'Use an official gov.pk, gos.pk, Edhi or Chhipa HTTPS page. A linked source does not automatically verify every community claim.',
+    demo: 'Official references can be attached to public reports, not simulated demos.',
+    error: 'Check the source URL, publication date and required fields.',
+  },
   theme: { light: 'Switch to light theme', dark: 'Switch to dark theme' },
   demo: {
     badge: 'Demo',
@@ -192,6 +266,14 @@ export const copy = {
       `${field} confidence ${n >= 0.8 ? 'high' : n >= 0.5 ? 'moderate' : 'low'}`,
   },
   errors: {
+    unauthorized: 'Sign in as the administrator.',
+    invalid_credentials: 'Email or password is incorrect.',
+    login_limited: 'Too many sign-in attempts. Try again in 15 minutes.',
+    auth_unavailable: 'Admin sign-in is unavailable. Please try again later.',
+    chat_limited:
+      'Chat limit reached. Wait before sending another message. Emergency contacts remain available below.',
+    source_limit: 'Keep up to five official references per incident.',
+    demo_source: 'Official sources cannot be attached to simulated incidents.',
     too_short: 'Add a few more words about what happened.',
     too_long: 'Keep it under 1,000 characters.',
     accusation:

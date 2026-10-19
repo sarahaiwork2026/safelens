@@ -4,6 +4,7 @@ import { RouteError } from './app/RouteError';
 import { AppShell, prepareShell } from './app/AppShell';
 import { ActionLink, Skeleton } from './components/ui';
 import { copy } from './copy';
+import AdminGate from './app/AdminGate';
 export const routes: RouteObject[] = [
   {
     Component: AppShell,
@@ -27,28 +28,47 @@ export const routes: RouteObject[] = [
         }),
       },
       {
-        path: '/incidents',
+        Component: AdminGate,
+        children: [
+          {
+            path: '/incidents',
+            lazy: async () => ({
+              Component: (await import('./features/incidents/IncidentsPage'))
+                .default,
+            }),
+          },
+          {
+            path: '/incidents/:ref',
+            lazy: async () => ({
+              Component: (await import('./features/incident/IncidentPage'))
+                .default,
+            }),
+          },
+          {
+            path: '/map',
+            lazy: async () => ({
+              Component: (await import('./features/map/MapPage')).default,
+            }),
+          },
+          {
+            path: '/test-lab',
+            lazy: async () => ({
+              Component: (await import('./features/test-lab/TestLabPage'))
+                .default,
+            }),
+          },
+        ],
+      },
+      {
+        path: '/login',
         lazy: async () => ({
-          Component: (await import('./features/incidents/IncidentsPage'))
-            .default,
+          Component: (await import('./features/auth/LoginPage')).default,
         }),
       },
       {
-        path: '/incidents/:ref',
+        path: '/chat',
         lazy: async () => ({
-          Component: (await import('./features/incident/IncidentPage')).default,
-        }),
-      },
-      {
-        path: '/map',
-        lazy: async () => ({
-          Component: (await import('./features/map/MapPage')).default,
-        }),
-      },
-      {
-        path: '/test-lab',
-        lazy: async () => ({
-          Component: (await import('./features/test-lab/TestLabPage')).default,
+          Component: (await import('./features/chat/ChatPage')).default,
         }),
       },
       {
@@ -95,7 +115,9 @@ export async function resolveRoutes(pathname: string) {
 export async function createApplicationRouter() {
   const [definitions] = await Promise.all([
     resolveRoutes(window.location.pathname),
-    window.location.pathname === '/' ? Promise.resolve() : prepareShell(),
+    /^\/(incidents|map|test-lab)/.test(window.location.pathname)
+      ? prepareShell()
+      : Promise.resolve(),
   ]);
   return createBrowserRouter(definitions, {
     hydrationData: { loaderData: {}, actionData: null, errors: null },

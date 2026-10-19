@@ -16,7 +16,8 @@ const template = await readFile('dist/client/index.html', 'utf8');
 for (const [path, file] of [
   ['/', 'landing.html'],
   ['/report', 'report.html'],
-  ['/incidents', 'incidents.html'],
+  ['/login', 'login.html'],
+  ['/chat', 'chat.html'],
 ] as const) {
   const handler = createStaticHandler(await resolveRoutes(path)),
     context = await handler.query(new Request(`http://safelens.local${path}`));

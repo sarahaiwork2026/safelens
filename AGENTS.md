@@ -78,7 +78,9 @@ Build only what traces to the proposal. If a feature is not in this table, do no
 | Ethics, limitations and disclaimer in the UI | 14, 15 |
 | Small landing page with the pitch and two calls to action | Supervisor pitch |
 
-Out of scope, never build: voice, image or video input, emergency dispatch, continuous or one-shot GPS location, push notifications or a service worker, native or mobile app, predictive policing, surveillance, facial recognition, accounts, logins, roles, payments, chat, comments, analytics dashboards beyond the stat strip and activity strip, translation of the UI into Urdu, admin panels.
+User-authorized extension, 19 October 2026: add one password-authenticated admin for all incident dashboards and APIs, a public multilingual safety chatbot using bounded database summaries and the existing Groq model, and admin-managed official source references. Credentials belong only in private configuration and Cloudflare secrets. Chat must distinguish community reports, demo data and admin-reviewed official links; absence of reports never means safety. Keep the existing public reporting form. No public signup or additional roles.
+
+Out of scope, never build: voice, image or video input, emergency dispatch, continuous or one-shot GPS location, push notifications or a service worker, native or mobile app, predictive policing, surveillance, facial recognition, payments, comments, analytics dashboards beyond the stat strip and activity strip, translation of the whole UI into Urdu.
 
 ## 5. Stack and approved dependencies
 

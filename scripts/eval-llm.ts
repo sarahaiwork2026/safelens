@@ -7,16 +7,18 @@ import type {
 } from '../packages/core/src';
 import { BASE_FIXTURES } from '../packages/core/src/evaluation';
 const target = process.env.SAFELENS_TARGET ?? 'http://127.0.0.1:5173';
+let adminCookie = '';
 async function request<T>(path: string, body?: unknown): Promise<T> {
   const response = await fetch(
     target + path,
     body === undefined
-      ? {}
+      ? { headers: { Cookie: adminCookie } }
       : {
           method: 'POST',
           headers: {
             Origin: new URL(target).origin,
             'Content-Type': 'application/json',
+            Cookie: adminCookie,
           },
           body: JSON.stringify(body),
         },
@@ -37,6 +39,23 @@ async function runSuite(suite: 'base' | 'extra') {
   return run.runId;
 }
 const health = await request<Health>('/api/health');
+const email = process.env.SAFELENS_ADMIN_EMAIL,
+  password = process.env.SAFELENS_ADMIN_PASSWORD;
+if (!email || !password)
+  throw new Error(
+    'Set SAFELENS_ADMIN_EMAIL and SAFELENS_ADMIN_PASSWORD securely, or run Test Lab after signing in through the browser.',
+  );
+const login = await fetch(target + '/api/auth/login', {
+  method: 'POST',
+  headers: {
+    Origin: new URL(target).origin,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({ email, password }),
+});
+if (!login.ok)
+  throw new Error(`Admin sign-in failed with HTTP ${login.status}.`);
+adminCookie = login.headers.get('Set-Cookie')?.split(';')[0] ?? '';
 if (!health.engines.groq && !health.engines.gemini)
   throw new Error(
     'Configure a Groq or Gemini key securely before live AI evaluation.',

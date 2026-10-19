@@ -49,11 +49,51 @@ export interface TimelineEvent {
   toStatus: Status | null;
 }
 export interface IncidentDetail {
+  sources?: OfficialSource[];
   incident: IncidentSummary;
   reports: ReportView[];
   timeline: TimelineEvent[];
   labels: EvidenceLabel[];
   guidance: string;
+}
+export interface OfficialSource {
+  id: string;
+  title: string;
+  url: string;
+  summary: string;
+  publishedAt: number;
+  reviewedAt: number;
+}
+export interface AdminSession {
+  authenticated: boolean;
+  email: string | null;
+}
+export interface ChatIncident {
+  reportCount: number;
+  verification: 'unverified';
+  code: string;
+  area: string;
+  type: Exclude<IncidentType, 'unclear'>;
+  severity: Severity;
+  status: Status;
+  simulated: boolean;
+  updatedAt: number;
+  lat: number;
+  lng: number;
+  evidence: IncidentSummary['evidence'];
+  sources: OfficialSource[];
+}
+export interface ChatReply {
+  answer: string;
+  language: 'English' | 'Urdu' | 'Roman Urdu';
+  advice: string[];
+  incidents: ChatIncident[];
+  areas: string[];
+  retrievedAt: number;
+  engine: 'groq' | 'rules';
+  limited: boolean;
+  routeApproximate: boolean;
+  contacts: { name: string; number: string; source: string; checked: string }[];
 }
 export interface IncidentList {
   incidents: IncidentSummary[];

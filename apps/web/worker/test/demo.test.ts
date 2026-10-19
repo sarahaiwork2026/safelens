@@ -4,7 +4,7 @@ import { analyzeReport } from 'core';
 import { bindings } from './setup';
 import { list } from '../db/read';
 import { storeReport } from '../db/write';
-import app from '../index';
+import { adminApp as app } from './setup';
 
 async function seed() {
   await bindings.DB.exec(

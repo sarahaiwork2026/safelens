@@ -7,6 +7,10 @@ import { configured } from './services/turnstile';
 import { reportRoutes } from './routes/reports';
 import { testRoutes } from './routes/test-runs';
 import { incidentRoutes } from './routes/incidents';
+import { authRoutes } from './routes/auth';
+import { authenticated, requireAdmin } from './services/auth';
+import { sourceRoutes } from './routes/sources';
+import { chatRoutes } from './routes/chat';
 const app = new Hono<{ Bindings: Env }>();
 app.use('/api/*', security);
 app.use(
@@ -33,9 +37,28 @@ app.get('/api/health', async (c) => {
     version: '0.1.0',
   });
 });
+app.route('/api/auth', authRoutes);
+app.route('/api/chat', chatRoutes);
+app.use('/api/test-runs', requireAdmin);
+app.use('/api/test-runs/*', requireAdmin);
+app.use('/api/incidents', requireAdmin);
+app.use('/api/incidents/*', requireAdmin);
 app.route('/api/test-runs', testRoutes);
 app.route('/api/reports', reportRoutes);
 app.route('/api/incidents', incidentRoutes);
+app.route('/api/incidents', sourceRoutes);
+for (const path of ['/incidents', '/incidents/*', '/map', '/test-lab']) {
+  app.get(path, async (c) => {
+    if (!(await authenticated(c)))
+      return c.redirect(
+        `/login?next=${encodeURIComponent(new URL(c.req.url).pathname + new URL(c.req.url).search)}`,
+      );
+    c.header('Cache-Control', 'private, no-store');
+    return c.env.ASSETS
+      ? c.env.ASSETS.fetch(c.req.raw)
+      : c.text('Static assets are unavailable', 503);
+  });
+}
 app.get('/', (c) => {
   const url = new URL(c.req.url);
   url.pathname = '/landing';

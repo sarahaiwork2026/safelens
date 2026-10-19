@@ -4,7 +4,8 @@
       "url": [
         "http://127.0.0.1:4173/",
         "http://127.0.0.1:4173/report",
-        "http://127.0.0.1:4173/incidents"
+        "http://127.0.0.1:4173/login",
+        "http://127.0.0.1:4173/chat"
       ],
       "numberOfRuns": 1,
       "settings": {

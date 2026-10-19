@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import app from '../index';
+import { adminApp as app } from './setup';
 import { bindings } from './setup';
 import type {
   IncidentDetail,
@@ -250,9 +250,29 @@ it('executes all 25 Test Lab reports, isolates live data, checks threads and res
   ).toBe(0);
 });
 
-it('evaluates all 26 extra cases through isolated rules runs without storing reports',async()=>{
- const created=await (await request('/api/test-runs',{engine:'rules',suite:'extra'})).json<TestRunCreated>();
- expect(created.order).toHaveLength(26);
- for(const reportId of created.order){const response=await request(`/api/test-runs/${created.runId}/steps`,{reportId});expect(response.status,reportId).toBe(200);const result=await response.json<import('core').ExtraEvaluationStep>();expect(result.pass,`${reportId}: ${result.differences.join('; ')}`).toBe(true);}
- const completed=await (await request(`/api/test-runs/${created.runId}`)).json<import('core').ExtraRunView>();expect(completed.results).toHaveLength(26);expect(completed.results.filter(r=>r.status==='rejected')).toHaveLength(2);expect(await bindings.DB.prepare('SELECT COUNT(*) AS n FROM reports').first('n')).toBe(0);
+it('evaluates all 26 extra cases through isolated rules runs without storing reports', async () => {
+  const created = await (
+    await request('/api/test-runs', { engine: 'rules', suite: 'extra' })
+  ).json<TestRunCreated>();
+  expect(created.order).toHaveLength(26);
+  for (const reportId of created.order) {
+    const response = await request(`/api/test-runs/${created.runId}/steps`, {
+      reportId,
+    });
+    expect(response.status, reportId).toBe(200);
+    const result = await response.json<import('core').ExtraEvaluationStep>();
+    expect(result.pass, `${reportId}: ${result.differences.join('; ')}`).toBe(
+      true,
+    );
+  }
+  const completed = await (
+    await request(`/api/test-runs/${created.runId}`)
+  ).json<import('core').ExtraRunView>();
+  expect(completed.results).toHaveLength(26);
+  expect(completed.results.filter((r) => r.status === 'rejected')).toHaveLength(
+    2,
+  );
+  expect(
+    await bindings.DB.prepare('SELECT COUNT(*) AS n FROM reports').first('n'),
+  ).toBe(0);
 });

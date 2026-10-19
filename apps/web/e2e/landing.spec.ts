@@ -73,7 +73,7 @@ test('entry pages render useful HTML before JavaScript and keep the form inert u
   for (const [path, heading] of [
     ['/', 'Scattered reports, one clear incident story'],
     ['/report', 'Report an incident'],
-    ['/incidents', 'Incidents'],
+    ['/login', 'Admin sign in'],
   ] as const) {
     await page.goto(path ?? '/');
     await expect(

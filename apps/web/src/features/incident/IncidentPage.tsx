@@ -28,6 +28,7 @@ import { ReportCard } from '../../components/incident/ReportCard';
 import { Contacts } from '../../components/incident/Contacts';
 import { EscalationPath } from '../../components/incident/EscalationPath';
 import { when } from '../../lib/format';
+import OfficialSources from './OfficialSources';
 const MiniMap = lazy(() => import('../map/MiniMap'));
 export default function IncidentPage() {
   const { ref = '' } = useParams(),
@@ -185,6 +186,7 @@ export default function IncidentPage() {
           </section>
         </div>
         <aside className="stack">
+          <OfficialSources data={data} />
           <EvidencePanel
             labels={data.labels}
             reportCount={i.reportCount}

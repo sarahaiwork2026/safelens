@@ -32,8 +32,8 @@ export default function LandingPage() {
             {copy.actions.report}
             <ArrowRight size={17} />
           </ActionLink>
-          <ActionLink to="/incidents" variant="secondary">
-            {copy.actions.incidents}
+          <ActionLink to="/chat" variant="secondary">
+            {copy.chat.title}
           </ActionLink>
         </div>
       </section>

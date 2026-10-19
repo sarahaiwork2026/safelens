@@ -3,6 +3,7 @@ import type { IncidentDetail, IncidentList, Severity } from 'core';
 import { claimCounts, eventView, incidentView, reportView } from './rows';
 import type { IncidentRow, ReportRow, EventRow } from './rows';
 import { ApiError } from '../services/errors';
+import { sourcesFor } from './sources';
 export async function detail(
   db: D1Database,
   ref: number,
@@ -41,6 +42,7 @@ export async function detail(
     }));
   return {
     incident: incidentView(row),
+    sources: await sourcesFor(db, row.id),
     reports: views,
     timeline: timeline.map(eventView),
     labels,

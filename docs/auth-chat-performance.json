@@ -1,0 +1,34 @@
+[
+  {
+    "url": "http://127.0.0.1:4173/report",
+    "checkedAt": "2026-10-19T16:03:37.685Z",
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "lcpMs": 850
+  },
+  {
+    "url": "http://127.0.0.1:4173/",
+    "checkedAt": "2026-10-19T16:03:25.863Z",
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "lcpMs": 945
+  },
+  {
+    "url": "http://127.0.0.1:4173/chat",
+    "checkedAt": "2026-10-19T16:03:59.271Z",
+    "performance": 99.0,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "lcpMs": 763
+  },
+  {
+    "url": "http://127.0.0.1:4173/login",
+    "checkedAt": "2026-10-19T16:03:48.540Z",
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "lcpMs": 682
+  }
+]

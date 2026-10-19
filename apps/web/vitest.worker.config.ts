@@ -10,7 +10,11 @@ export default defineConfig({
   ],
   test: {
     provide: {
-      migration: ['0001_init.sql', '0002_demo_flag.sql']
+      migration: [
+        '0001_init.sql',
+        '0002_demo_flag.sql',
+        '0004_auth_sources.sql',
+      ]
         .map((file) => readFileSync(`migrations/${file}`, 'utf8'))
         .join('\n'),
       seed: readFileSync('migrations/0003_demo_incidents.sql', 'utf8'),

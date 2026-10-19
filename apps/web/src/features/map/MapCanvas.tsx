@@ -17,6 +17,8 @@ interface Props {
   onSelect?: ((ref: number) => void) | undefined;
   onInView?: ((refs: number[]) => void) | undefined;
   interactive?: boolean;
+  fallbackTo?: string;
+  fallbackLabel?: string;
 }
 export default function MapCanvas({
   incidents,
@@ -24,6 +26,8 @@ export default function MapCanvas({
   onSelect,
   onInView,
   interactive = true,
+  fallbackTo = '/incidents',
+  fallbackLabel = copy.map.list,
 }: Props) {
   const container = useRef<HTMLDivElement>(null),
     map = useRef<MapInstance | null>(null),
@@ -193,8 +197,8 @@ export default function MapCanvas({
       <div ref={container} className="map-container" hidden={failed} />
       {failed && (
         <EmptyState title={copy.map.failure}>
-          <ActionLink to="/incidents" variant="secondary">
-            {copy.map.list}
+          <ActionLink to={fallbackTo} variant="secondary">
+            {fallbackLabel}
           </ActionLink>
         </EmptyState>
       )}

@@ -6,6 +6,9 @@ import type {
   TestRunCreated,
   TestRunView,
   TestStepResult,
+  AdminSession,
+  ChatReply,
+  OfficialSource,
 } from 'core';
 import { copy } from '../copy';
 declare global {
@@ -51,6 +54,12 @@ async function request<T>(
   }
   if (response.status === 304 && cached) return cached.data as T;
   if (!response.ok) {
+    if (response.status === 401 && !path.startsWith('/auth')) {
+      listCache.clear();
+      window.location.assign(
+        `/login?next=${encodeURIComponent(location.pathname + location.search)}`,
+      );
+    }
     let code = 'generic';
     try {
       const value: unknown = await response.json();
@@ -83,6 +92,25 @@ async function request<T>(
   return result as T;
 }
 export const api = {
+  session: () => request<AdminSession>('/auth/session'),
+  login: (email: string, password: string) =>
+    request<AdminSession>('/auth/login', 'POST', { email, password }),
+  logout: async () => {
+    await request('/auth/logout', 'POST', {});
+    listCache.clear();
+  },
+  chat: (message: string, history: string[], language?: string) =>
+    request<ChatReply>('/chat', 'POST', {
+      message,
+      history,
+      ...(language ? { language } : {}),
+    }),
+  source: (
+    ref: number,
+    body: { title: string; url: string; summary: string; publishedAt: number },
+  ) => request<OfficialSource[]>(`/incidents/${ref}/sources`, 'POST', body),
+  removeSource: (ref: number, id: string) =>
+    request<undefined>(`/incidents/${ref}/sources/${id}`, 'DELETE', {}),
   health: () => request<Health>('/health'),
   incidents: (status = 'active') =>
     request<IncidentList>(`/incidents?status=${status}`),

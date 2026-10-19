@@ -481,7 +481,7 @@ All hand-built with CSS and a little inline SVG for icons only. No chart library
 | XSS | React text rendering only, no `dangerouslySetInnerHTML`, no HTML from the LLM, strict CSP. |
 | CSRF | No cookies, same-origin API, `Origin` must equal the request origin on POST, PATCH and DELETE, `Content-Type: application/json` required (`415` otherwise). |
 | Tampering with follow-up data | HMAC-SHA256 signed draft token with 15 minute expiry. The client never sends extraction fields directly. |
-| Personal data | Phone and CNIC redaction before LLM and storage, `identifying_details` hides raw text in public views, no accounts, no cookies, no IPs, logs carry no report text. |
+| Personal data | Phone and CNIC redaction before LLM and storage, `identifying_details` hides raw text in public views, one admin account, HttpOnly session cookie, hashed rate keys only, logs carry no report text. |
 | Accusations and hate | Accusation lexicon and LLM flags reject the report before storage. Summaries never name people. |
 | Bidi spoofing | Bidi control characters stripped in sanitize. |
 | SQL injection | Prepared statements with `.bind()` only. |
@@ -593,3 +593,13 @@ E2E and CI set `EXTRACTOR_CHAIN=rules` so tests never call an LLM.
 - Workers Logs (free) with one structured JSON line per request: request ID, route, status, duration, engine, model, LLM latency, fallback reason. Never report text, never IP.
 - `/api/health` for uptime checks.
 - `docs/eval-log.md` records AI engine scores against the fixtures whenever the model or prompt changes.
+
+## 22. Authorized admin and safety-chat extension, 19 October 2026
+
+Public reporting remains available. Incident and Test Lab API prefixes require a valid D1-backed admin session; dashboard HTML redirects to sign-in. Only login/chat/report entry pages are pre-rendered. The single account is configured by ADMIN_EMAIL and secret ADMIN_PASSWORD_HASH. PBKDF2-SHA256 uses the Workers maximum of 100,000 iterations with a 24-byte random salt. Eight-hour opaque tokens are hashed in D1. Cookie flags are HttpOnly, Secure and SameSite=Strict in production; logout and credential rotation revoke access. Existing origin, body-size and rate protections apply. Login is throttled before password derivation. Migration 0004 adds sessions and official sources without modifying existing incidents.
+
+Public chat accepts at most 600 characters plus three short previous questions. It redacts personal identifiers before the existing Groq model interprets a strict enum/area plan. Database retrieval and reviewed guidance are authoritative for response construction; raw model prose cannot create sources or safety claims. Bounded public summaries include type, area, severity, status, evidence counts, timestamps and reviewed official references, excluding original report narratives. Known hazards and locations take precedence over model guesses. There is no absence-of-reports safety assurance.
+
+Chat rate limits are three requests/minute and twenty/hour per salted connection hash. Persistent atomic D1 counters reserve at most two Groq calls/minute and 200/day within the shared 800/day budget. A provider 429 sets persistent cooldown; failures use local guidance and database results. Questions are not persisted. Recent community updates cover seven days; demos are labeled separately. Route retrieval is an approximate two-kilometre straight corridor. No live road navigation or official incident feed is implied.
+
+The admin may attach up to five HTTPS references to each real incident from government, Edhi or Chhipa domains. A required review step records publication and review timestamps. Source contents are not fetched automatically, and attaching a reference never upgrades community claims to verified. Removal is authenticated. Simulated incidents reject official references. The user chose existing incident data plus admin-attached official links instead of a new live feed.

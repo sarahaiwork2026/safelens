@@ -17,6 +17,8 @@ for (const [path, feature] of Object.entries({
   '/map': 'map/MapPage',
   '/test-lab': 'test-lab/TestLabPage',
   '/about': 'about/AboutPage',
+  '/chat': 'chat/ChatPage',
+  '/login': 'auth/LoginPage',
 })) {
   const key = Object.keys(manifest).find((k) =>
     k.endsWith(`features/${feature}.tsx`),
@@ -32,7 +34,7 @@ for (const [path, feature] of Object.entries({
     for (const dependency of chunk.imports ?? []) visit(dependency);
   }
   if (key) visit(key);
-  if (path !== '/') {
+  if (['/incidents', '/incident', '/map', '/test-lab'].includes(path)) {
     const alert = Object.keys(manifest).find((k) =>
       k.endsWith('components/alerts/AlertHost.tsx'),
     );
@@ -40,7 +42,7 @@ for (const [path, feature] of Object.entries({
   }
   routes[path] = [...files];
 }
-const source = `(()=>{const routes=${JSON.stringify(routes)},path=location.pathname.replace(/\\/$/,'')||'/',key=path.startsWith('/incidents/')?'/incident':path;for(const file of routes[key]||[]){const link=document.createElement('link');link.rel='modulepreload';link.fetchPriority='low';link.href=file;document.head.appendChild(link);}if(path!=='/'){const paths=['/api/incidents?status=active',...(['/report','/test-lab'].includes(path)?['/api/health']:[])];window.safelensPreloads={};for(const url of paths)window.safelensPreloads[url]=fetch(url).then(response=>response,error=>error);}})();`;
+const source = `(()=>{const routes=${JSON.stringify(routes)},path=location.pathname.replace(/\\/$/,'')||'/',key=path.startsWith('/incidents/')?'/incident':path;for(const file of routes[key]||[]){const link=document.createElement('link');link.rel='modulepreload';link.fetchPriority='low';link.href=file;document.head.appendChild(link);}if(path==='/report'){window.safelensPreloads={'/api/health':fetch('/api/health').then(response=>response,error=>error)};}})();`;
 const filename = `route-preload-${createHash('sha256').update(source).digest('hex').slice(0, 10)}.js`;
 for (const file of await readdir(`${directory}/assets`))
   if (/^route-preload-.*\.js$/.test(file))

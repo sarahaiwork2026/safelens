@@ -5,7 +5,7 @@ try {
   contents = await readFile(path, 'utf8');
 } catch (error) {
   if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
-    contents = 'ENVIRONMENT=development\nEXTRACTOR_CHAIN=rules\n';
+    contents = await readFile('apps/web/.dev.vars.example', 'utf8');
     await writeFile(path, contents, { flag: 'wx' });
   } else throw error;
 }

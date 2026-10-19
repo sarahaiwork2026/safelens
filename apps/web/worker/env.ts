@@ -1,5 +1,7 @@
 export interface Env {
-  ASSETS?:Fetcher;
+  ADMIN_EMAIL?: string;
+  ADMIN_PASSWORD_HASH?: string;
+  ASSETS?: Fetcher;
   DB: D1Database;
   REPORT_LIMITER: RateLimit;
   API_LIMITER: RateLimit;
